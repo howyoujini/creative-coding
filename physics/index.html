@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Making Motion Feel Alive</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0f;
+      color: #e8e8e8;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 60px 120px 60px;
+    }
+
+    .slide.has-controls {
+      padding-bottom: 140px;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    .slide canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      width: 100%;
+      pointer-events: auto;
+      overflow-y: auto;
+      max-height: 100%;
+      text-align: center;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    .slide-content::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+
+    .slide-content.interactive {
+      pointer-events: auto;
+    }
+
+    h1 {
+      font-size: 4rem;
+      font-weight: 200;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+
+    p {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: #aaa;
+      max-width: 800px;
+    }
+
+    .message {
+      font-size: 2rem;
+      font-weight: 300;
+      text-align: center;
+      line-height: 1.4;
+      color: #fff;
+      margin: 0 auto;
+    }
+
+    .keyword {
+      color: #f87171;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-top: 1rem;
+    }
+
+    .list {
+      list-style: none;
+      font-size: 1.15rem;
+      line-height: 2;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .list li {
+      padding-left: 2rem;
+      position: relative;
+    }
+
+    .list li::before {
+      content: attr(data-num);
+      position: absolute;
+      left: 0;
+      color: #f87171;
+      font-weight: 500;
+    }
+
+    .list-desc {
+      font-size: 0.95rem;
+      color: #666;
+      margin-left: 0.5rem;
+    }
+
+    .description {
+      margin: 1.5rem auto;
+      padding: 1.2rem 1.5rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      max-width: 800px;
+      text-align: left;
+    }
+
+    .description p {
+      font-size: 1rem;
+      color: #888;
+      margin: 0;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #e8e8e8;
+      margin: 0.8rem auto;
+      border: 1px solid rgba(248, 113, 113, 0.1);
+      max-width: 700px;
+      text-align: left;
+    }
+
+    .code-block .comment {
+      color: #666;
+    }
+
+    .code-block .keyword {
+      color: #c792ea;
+    }
+
+    .code-block .property {
+      color: #82aaff;
+    }
+
+    .code-block .number {
+      color: #f78c6c;
+    }
+
+    .code-block .string {
+      color: #c3e88d;
+    }
+
+    .formula {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.2rem;
+      color: #f87171;
+      text-align: center;
+      padding: 0.8rem 1.5rem;
+      background: rgba(248, 113, 113, 0.05);
+      border-radius: 8px;
+      margin: 0.8rem auto;
+      max-width: 500px;
+    }
+
+    .bullet-list {
+      list-style: none;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #aaa;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .bullet-list li {
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .bullet-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #f87171;
+    }
+
+    .comparison-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1rem auto;
+      max-width: 900px;
+    }
+
+    .comparison-col {
+      padding: 1.2rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+    }
+
+    .comparison-col h4 {
+      font-size: 1rem;
+      color: #f87171;
+      margin-bottom: 0.8rem;
+      font-weight: 500;
+    }
+
+    .comparison-col ul {
+      list-style: none;
+      font-size: 0.9rem;
+      color: #888;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .comparison-col ul li::before {
+      content: '•';
+      margin-right: 0.5rem;
+      color: #f87171;
+    }
+
+    .demo-container {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .demo-box {
+      position: relative;
+      width: 400px;
+      height: 300px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .demo-box canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .demo-label {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      font-size: 0.9rem;
+      color: #666;
+      z-index: 2;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 50;
+      pointer-events: auto;
+      background: rgba(10, 10, 15, 0.9);
+      padding: 15px 25px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: none !important;
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slider-label {
+      font-size: 0.85rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="range"] {
+      width: 150px;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      appearance: none;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #f87171;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .toggle-btn {
+      padding: 10px 20px;
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      color: #f87171;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn:hover {
+      background: rgba(248, 113, 113, 0.2);
+    }
+
+    .toggle-btn.active {
+      background: #f87171;
+      color: #0a0a0f;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .nav button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #888;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+    }
+
+    .nav button:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: #f87171;
+      transition: width 0.3s ease;
+      z-index: 100;
+    }
+
+    .slide-number {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      font-size: 0.9rem;
+      color: #444;
+      z-index: 100;
+    }
+
+    .split-view {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .text-side {
+      padding-right: 40px;
+      text-align: left;
+    }
+
+    .demo-side {
+      display: flex;
+      justify-content: center;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1rem auto;
+      max-width: 900px;
+    }
+
+    .info-card {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: left;
+    }
+
+    .info-card h4 {
+      color: #f87171;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .info-card p {
+      font-size: 0.85rem;
+      color: #777;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide.active .slide-content {
+      animation: fadeIn 0.6s ease;
+    }
+
+    .highlight-box {
+      background: rgba(248, 113, 113, 0.08);
+      border-left: 3px solid #f87171;
+      padding: 1rem 1.5rem;
+      margin: 1rem auto;
+      border-radius: 0 8px 8px 0;
+      max-width: 700px;
+      text-align: left;
+    }
+
+    .highlight-box p {
+      color: #aaa;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .small-text {
+      font-size: 0.9rem !important;
+      color: #666 !important;
+    }
+
+    /* Reference & Resource Styles */
+    .references {
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: rgba(248, 113, 113, 0.03);
+      border-radius: 12px;
+      border: 1px solid rgba(248, 113, 113, 0.1);
+      max-width: 900px;
+      text-align: left;
+    }
+
+    .references h4 {
+      color: #f87171;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .ref-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .ref-item:hover {
+      background: rgba(248, 113, 113, 0.1);
+    }
+
+    .ref-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .ref-item .ref-title {
+      color: #e8e8e8;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .ref-item .ref-desc {
+      color: #666;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .ref-item a {
+      color: #f87171;
+      text-decoration: none;
+      font-size: 0.75rem;
+    }
+
+    .ref-item a:hover {
+      text-decoration: underline;
+    }
+
+    /* Speaker Notes Toggle */
+    .speaker-notes {
+      margin: 1.5rem auto;
+      max-width: 800px;
+      pointer-events: auto;
+    }
+
+    .notes-toggle {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #888;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .notes-toggle:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .notes-content {
+      display: none;
+      margin-top: 1rem;
+      padding: 1.2rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .notes-content.active {
+      display: block;
+    }
+
+    .notes-content p {
+      font-size: 0.95rem;
+      color: #999;
+      line-height: 1.7;
+      margin-bottom: 0.8rem;
+    }
+
+    .notes-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .notes-content strong {
+      color: #f87171;
+    }
+
+    .notes-content a {
+      color: #f87171;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(248, 113, 113, 0.5);
+      transition: border-color 0.2s;
+    }
+
+    .notes-content a:hover {
+      border-bottom-color: #f87171;
+    }
+
+    /* Chapter Divider */
+    .chapter-slide {
+      background: linear-gradient(135deg, rgba(248, 113, 113, 0.1) 0%, rgba(10, 10, 15, 0) 50%);
+    }
+
+    .chapter-number {
+      font-size: 6rem;
+      font-weight: 100;
+      color: rgba(248, 113, 113, 0.3);
+      line-height: 1;
+    }
+
+    .chapter-title {
+      font-size: 3rem;
+      font-weight: 200;
+      margin: 1rem 0;
+    }
+
+    .chapter-desc {
+      font-size: 1.2rem;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Concept Card */
+    .concept-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: left;
+      margin: 1rem 0;
+    }
+
+    .concept-card h4 {
+      color: #f87171;
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .concept-card p {
+      font-size: 0.95rem;
+      color: #888;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Math Formula Block */
+    .math-block {
+      background: rgba(0, 0, 0, 0.4);
+      border-left: 3px solid #f87171;
+      padding: 1rem 1.5rem;
+      margin: 1rem auto;
+      border-radius: 0 8px 8px 0;
+      max-width: 600px;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .math-block .formula-main {
+      font-size: 1.4rem;
+      color: #f87171;
+      margin-bottom: 0.5rem;
+    }
+
+    .math-block .formula-explain {
+      font-size: 0.9rem;
+      color: #666;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Four Column Grid */
+    .four-col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 1.5rem auto;
+      max-width: 1000px;
+    }
+
+    /* Timeline / Step List */
+    .step-list {
+      text-align: left;
+      max-width: 700px;
+      margin: 1.5rem auto;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: rgba(248, 113, 113, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f87171;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content h5 {
+      color: #e8e8e8;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .step-content p {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0;
+    }
+
+    /* Two Column Layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 1.5rem auto;
+      max-width: 1000px;
+      text-align: left;
+    }
+
+    /* Use Case Cards */
+    .use-case {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .use-case h5 {
+      color: #f87171;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .use-case p {
+      font-size: 0.85rem;
+      color: #777;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Section Header */
+    .section-header {
+      margin-bottom: 2rem;
+    }
+
+    .section-tag {
+      display: inline-block;
+      background: rgba(248, 113, 113, 0.15);
+      color: #f87171;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="progress" id="progress"></div>
+
+    <!-- SLIDE 01: Title -->
+    <section class="slide active" data-slide="1">
+      <canvas id="canvas-01"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <h1>Making Motion Feel <span class="keyword">Alive</span></h1>
+        <h3>Physics as a Creative Tool</h3>
+        <p class="subtitle">Form → Motion → Behavior → System</p>
+        <div style="margin-top: 2rem;">
+          <p class="small-text">물리 시뮬레이션과 운동 제어를 통한 Procedural Art</p>
+          <p class="small-text" style="margin-top: 1rem; color: #f87171 !important;">2026 · Creative Coding Study</p>
+        </div>
+
+        <div class="description" style="max-width: 600px; margin: 2rem auto; text-align: left;">
+          <p style="font-size: 0.95rem; color: #888;">이 프레젠테이션에서 다루는 내용:</p>
+          <ul class="bullet-list" style="margin-top: 0.8rem;">
+            <li>왜 랜덤만으로는 부족한가</li>
+            <li>파티클 시스템과 벡터 연산</li>
+            <li>힘(Force)과 통합(Integration)</li>
+            <li>스프링, 제약조건, 플로우 필드</li>
+            <li>실용적인 코드 예제와 활용법</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 02: Random Problem -->
+    <section class="slide" data-slide="2">
+      <div class="slide-content">
+        <div class="section-header" style="text-align: center;">
+          <span class="section-tag">Chapter 1</span>
+          <p class="message">왜 <span class="keyword">랜덤</span>은 금방 지루해질까?</p>
+        </div>
+        <div class="demo-container">
+          <div class="demo-box">
+            <canvas id="canvas-02-left"></canvas>
+            <span class="demo-label">Math.random()</span>
+          </div>
+          <div class="demo-box">
+            <canvas id="canvas-02-right"></canvas>
+            <span class="demo-label">Time-accumulated</span>
+          </div>
+        </div>
+        <div class="comparison-table">
+          <div class="comparison-col">
+            <h4>순수 랜덤의 문제</h4>
+            <ul>
+              <li>매 프레임 독립적인 값 생성</li>
+              <li>이전 상태와의 연결 없음</li>
+              <li>예측 불가능 = 무의미한 혼돈</li>
+              <li>인간의 뇌가 패턴을 찾지 못함</li>
+            </ul>
+          </div>
+          <div class="comparison-col">
+            <h4>시간 누적의 효과</h4>
+            <ul>
+              <li>이전 프레임의 값이 다음에 영향</li>
+              <li>연속성 = 추적 가능한 움직임</li>
+              <li>예측 가능하되 완전히 결정적이지 않음</li>
+              <li>뇌가 '생명'으로 인식</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-box" style="margin-top: 1.5rem;">
+          <p>핵심 인사이트: 랜덤은 "상태"만 만든다. 생명감은 <span class="keyword">시간에 따른 변화 규칙</span>에서 나온다.</p>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <div class="notes-content">
+            <p><strong>발표 포인트:</strong> 많은 초보자들이 Math.random()만으로 자연스러운 움직임을 만들려고 합니다. 왼쪽 데모를 보세요 - 점들이 깜빡이듯 무작위로 움직입니다. 이건 "노이즈"지 "움직임"이 아닙니다.</p>
+            <p>오른쪽을 보세요. 같은 랜덤 요소가 있지만, 시간에 따라 누적됩니다. position += velocity 같은 간단한 공식만으로도 이 차이가 납니다.</p>
+            <p><strong>핵심 질문:</strong> "생명체는 어떻게 움직이나요?" - 이전 상태를 기억하고, 그것을 바탕으로 다음 상태를 결정합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 03: Shift in Thinking -->
+    <section class="slide has-controls" data-slide="3">
+      <canvas id="canvas-03"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <p class="message">우리는 형태를 그리는 사람이 아니라,<br><span class="keyword">규칙을 설계하는 사람</span>이다</p>
+        <div class="description" style="max-width: 700px; margin: 2rem auto;">
+          <p style="margin-bottom: 1rem;">같은 점 하나가 규칙에 따라 완전히 다른 움직임을 보여준다:</p>
+          <ul class="bullet-list" style="text-align: left;">
+            <li><strong>Linear</strong> — 단순 왕복, 기계적 느낌 (pos.x = sin(time))</li>
+            <li><strong>Circular</strong> — 궤도 운동, 안정적 순환 (cos, sin 조합)</li>
+            <li><strong>Noise</strong> — 유기적 배회, 자연스러운 탐색 (Perlin noise)</li>
+            <li><strong>Spring</strong> — 탄성 추종, 감정적 반응 (물리 기반)</li>
+          </ul>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <div class="notes-content">
+            <p><strong>핵심 메시지:</strong> Procedural Art에서 우리의 역할은 "무엇을 그릴까"가 아니라 "어떤 규칙을 적용할까"입니다.</p>
+            <p>각 버튼을 클릭하면서 같은 점이 어떻게 다르게 움직이는지 보여주세요. 코드 한 줄의 차이가 전혀 다른 "성격"을 만듭니다.</p>
+            <p><strong>실습 아이디어:</strong> 청중에게 "어떤 규칙이 가장 생명체 같나요?"라고 물어보세요. 대부분 Noise나 Spring을 선택합니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="toggle-btn active" data-rule="linear">Linear</button>
+        <button class="toggle-btn" data-rule="circular">Circular</button>
+        <button class="toggle-btn" data-rule="noise">Noise</button>
+        <button class="toggle-btn" data-rule="spring">Spring</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 04: Physics Map -->
+    <section class="slide" data-slide="4">
+      <canvas id="canvas-04"></canvas>
+      <div class="slide-content">
+        <div class="section-header" style="text-align: center;">
+          <span class="section-tag">로드맵</span>
+          <h2>Creative Coding <span class="keyword">Physics Map</span></h2>
+        </div>
+        <p style="margin-bottom: 1.5rem; font-size: 1.1rem; text-align: center;">크리에이티브 코딩에서 가장 자주 사용되는 물리 개념들</p>
+        <ul class="list">
+          <li data-num="1.">Particle <span class="list-desc">— 존재의 최소 단위. position, velocity, acceleration</span></li>
+          <li data-num="2.">Force <span class="list-desc">— 움직임의 원인. 중력, 마찰, 끌어당김, 밀어냄</span></li>
+          <li data-num="3.">Integration <span class="list-desc">— 시간을 어떻게 계산할 것인가. Euler vs Verlet</span></li>
+          <li data-num="4.">Constraint <span class="list-desc">— 형태를 유지하는 제약조건. 거리, 각도, 충돌</span></li>
+          <li data-num="5.">Flow <span class="list-desc">— 공간에 방향성 부여. Flow Field, Curl Noise</span></li>
+        </ul>
+        <div class="highlight-box" style="margin-top: 1.5rem;">
+          <p>오늘 다루지 않는 것: 정밀한 유체 역학(Navier-Stokes), 강체 물리(Rigid Body), 지형 생성</p>
+          <p style="margin-top: 0.5rem;">목표: <span class="keyword">즉각적으로 시각적 결과</span>가 나오는, 창작에 바로 활용 가능한 기법들</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 05: Particle -->
+    <section class="slide" data-slide="5">
+      <div class="slide-content">
+        <div class="section-header" style="text-align: center;">
+          <span class="section-tag">Chapter 2: 기초</span>
+        </div>
+        <div class="split-view">
+          <div class="text-side">
+            <h2>Particle = <span class="keyword">최소 생명 단위</span></h2>
+            <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">Particle은 점이 아니라 '행동하는 존재'다</p>
+
+            <div class="code-block">
+              <span class="keyword">class</span> <span class="property">Particle</span> {<br>
+              &nbsp;&nbsp;<span class="property">position</span>: Vector&nbsp;&nbsp;<span class="comment">// 현재 위치</span><br>
+              &nbsp;&nbsp;<span class="property">velocity</span>: Vector&nbsp;&nbsp;<span class="comment">// 속도 (방향 + 크기)</span><br>
+              &nbsp;&nbsp;<span class="property">acceleration</span>: Vector&nbsp;&nbsp;<span class="comment">// 가속도</span><br>
+              &nbsp;&nbsp;<span class="property">mass</span>: <span class="number">number</span>&nbsp;&nbsp;<span class="comment">// 질량 (힘의 영향)</span><br>
+              }
+            </div>
+
+            <div class="math-block">
+              <div class="formula-main">v = v + a → p = p + v</div>
+              <div class="formula-explain">매 프레임: 가속도→속도→위치 순으로 업데이트</div>
+            </div>
+
+            <ul class="bullet-list">
+              <li>모든 파티클 시스템의 기본 구조</li>
+              <li>1개든 10,000개든 동일한 물리 법칙</li>
+              <li>개별 행동 → 집단 패턴 (Emergence)</li>
+            </ul>
+          </div>
+          <div class="demo-side">
+            <div class="demo-box" style="width: 500px; height: 400px;">
+              <canvas id="canvas-05"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="speaker-notes" style="margin-top: 1rem;">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <div class="notes-content">
+            <p><strong>핵심 개념:</strong> Particle은 물리학의 "질점"과 같습니다. 크기는 무시하고 위치만 가진 점이지만, velocity와 acceleration이 추가되면서 "행동"이 생깁니다.</p>
+            <p><strong>데모 설명:</strong> 화면의 공이 벽에 부딪히며 튕기는 것을 보세요. 위치(position), 속도(velocity), 힘(force/acceleration)이 표시됩니다. 흰색 선이 속도, 노란색 선이 현재 작용하는 힘입니다.</p>
+            <p><strong>실무 팁:</strong> 처음에는 파티클 1개로 시작하세요. 1개가 제대로 움직이면 1000개도 똑같이 움직입니다.</p>
+            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+              <a href="https://natureofcode.com/vectors/" target="_blank">Nature of Code: Vectors</a> ·
+              <a href="https://www.youtube.com/watch?v=mQ-X-D5XIZ8" target="_blank">Coding Train: What is a Vector?</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 06: Force -->
+    <section class="slide has-controls" data-slide="6">
+      <canvas id="canvas-06"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <h2>Force: <span class="keyword">방향</span>을 가진 의도</h2>
+        <p style="margin: 1rem auto; max-width: 700px;">Force는 숫자가 아니라 벡터다. 방향과 크기를 가진 의도의 표현.</p>
+
+        <div class="three-col" style="max-width: 900px; margin: 1.5rem auto;">
+          <div class="info-card">
+            <h4>🌍 Gravity (중력)</h4>
+            <p>항상 아래로 작용하는 일정한 힘.<br><code>F = (0, 0.1)</code></p>
+          </div>
+          <div class="info-card">
+            <h4>🧲 Attract (끌어당김)</h4>
+            <p>목표 지점을 향해 작용.<br><code>F = normalize(target - pos) × strength</code></p>
+          </div>
+          <div class="info-card">
+            <h4>🌊 Noise Force</h4>
+            <p>위치 기반 의사 랜덤 방향.<br><code>F = fromAngle(noise(x, y) × 2π)</code></p>
+          </div>
+        </div>
+
+        <div class="math-block" style="max-width: 700px; margin: 1.5rem auto;">
+          <div class="formula-main">F = m × a &nbsp;→&nbsp; a = F / m</div>
+          <div class="formula-explain"><a href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion#Second_law" target="_blank" style="color: #f87171;">뉴턴의 제2법칙</a>: 질량이 클수록 같은 힘에 덜 반응</div>
+        </div>
+
+        <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
+          <p>핵심: 여러 힘이 동시에 작용할 때, 결과는 <span class="keyword">벡터의 합</span>이다.<br>
+          F_total = F_gravity + F_attract + F_noise + ...</p>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <div class="notes-content">
+            <p><strong>인터랙션 가이드:</strong> 마우스를 움직여보세요. 파티클들이 마우스를 향해 끌려옵니다. 버튼을 조합해서 여러 힘을 동시에 적용할 수 있습니다.</p>
+            <p><strong>실험:</strong> Gravity + Attract를 동시에 켜면 어떻게 될까요? 중력으로 떨어지면서도 마우스를 향해 휘어집니다. 이것이 벡터 합의 힘입니다.</p>
+            <p><strong>크리에이티브 팁:</strong> Noise Force만 켜면 유기적인 군집 행동이 나타납니다. 새떼, 물고기떼 시뮬레이션의 기초입니다.</p>
+            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+              <a href="https://natureofcode.com/forces/" target="_blank">Nature of Code: Forces</a> ·
+              <a href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion" target="_blank">Newton's Laws (Wikipedia)</a> ·
+              <a href="https://www.youtube.com/watch?v=WBdhAuWS6X8" target="_blank">Coding Train: Gravitational Attraction</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="toggle-btn" data-force="gravity">Gravity</button>
+        <button class="toggle-btn active" data-force="attract">Mouse Attract</button>
+        <button class="toggle-btn" data-force="noise">Noise Force</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 07: Integration -->
+    <section class="slide" data-slide="7">
+      <div class="slide-content">
+        <h2 style="text-align: center; margin-bottom: 0.5rem;">Integration: <span class="keyword">시간</span>을 어떻게 계산할 것인가</h2>
+        <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem; color: #888;">같은 힘이라도 적분 방법에 따라 완전히 다른 움직임</p>
+
+        <div class="demo-container">
+          <div class="demo-box" style="width: 450px; height: 320px;">
+            <canvas id="canvas-07-euler"></canvas>
+            <span class="demo-label">Euler Integration</span>
+          </div>
+          <div class="demo-box" style="width: 450px; height: 320px;">
+            <canvas id="canvas-07-verlet"></canvas>
+            <span class="demo-label">Verlet Integration</span>
+          </div>
+        </div>
+
+        <div class="comparison-table" style="max-width: 900px; margin: 1.5rem auto;">
+          <div class="comparison-col">
+            <h4>Euler Integration (오일러)</h4>
+            <div class="code-block" style="font-size: 0.85rem;">
+              velocity += acceleration<br>
+              position += velocity
+            </div>
+            <ul>
+              <li>✅ 구현이 단순함</li>
+              <li>⚠️ 높은 속도에서 불안정</li>
+              <li>❌ 에너지가 누적되어 폭발 가능</li>
+            </ul>
+          </div>
+          <div class="comparison-col">
+            <h4>Verlet Integration (베를레)</h4>
+            <div class="code-block" style="font-size: 0.85rem;">
+              velocity = position - oldPosition<br>
+              oldPosition = position<br>
+              position += velocity + acceleration
+            </div>
+            <ul>
+              <li>✅ 이전 위치를 "기억"</li>
+              <li>✅ 높은 안정성</li>
+              <li>✅ Constraint 처리에 최적</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 상세 설명</button>
+          <div class="notes-content">
+            <p><strong>왜 중요한가:</strong> Integration은 "미분의 역연산"입니다. 가속도(a)를 적분하면 속도(v), 속도를 적분하면 위치(p)가 됩니다. 하지만 컴퓨터는 연속적인 적분을 할 수 없어서 이산적으로 근사합니다.</p>
+            <p><strong>Euler의 문제:</strong> 마우스를 빠르게 움직여보세요. Euler(왼쪽)는 공이 불안정하게 진동하거나 튕겨나갈 수 있습니다. 이를 "numerical instability"라고 합니다.</p>
+            <p><strong>Verlet의 강점:</strong> 속도를 직접 저장하지 않고 "현재 위치 - 이전 위치"로 암묵적으로 계산합니다. 이 방식이 constraint(거리 제약) 처리에 매우 좋습니다.</p>
+            <p><strong>실무 선택 가이드:</strong><br>
+            - 간단한 파티클 효과 → Euler로 충분<br>
+            - 천, 로프, 체인 시뮬레이션 → Verlet 필수<br>
+            - 게임 물리 엔진 → 대부분 Verlet 변형 사용</p>
+            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+              <a href="https://en.wikipedia.org/wiki/Verlet_integration" target="_blank">Verlet Integration (Wikipedia)</a> ·
+              <a href="https://www.youtube.com/watch?v=3HjO_RGIjCU" target="_blank">Coding Train: Verlet Physics</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 08: Spring -->
+    <section class="slide has-controls" data-slide="8">
+      <canvas id="canvas-08"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <h2>Spring: 가장 많이 쓰이는 <span class="keyword">마법</span></h2>
+        <p style="margin: 1rem auto; max-width: 600px; font-size: 1.2rem;">탄성(Elasticity)은 감정을 만든다</p>
+
+        <div class="math-block" style="max-width: 500px; margin: 1.5rem auto;">
+          <div class="formula-main">F = -k × (position - target)</div>
+          <div class="formula-explain"><a href="https://en.wikipedia.org/wiki/Hooke%27s_law" target="_blank" style="color: #f87171;">Hooke의 법칙</a>: 목표와의 거리에 비례하는 복원력</div>
+        </div>
+
+        <div class="comparison-table" style="max-width: 800px; margin: 1rem auto;">
+          <div class="comparison-col">
+            <h4>Stiffness (강성) k</h4>
+            <ul>
+              <li>높음(0.15) → 빠르고 즉각적인 반응</li>
+              <li>낮음(0.02) → 느리고 부드러운 움직임</li>
+              <li>UI 버튼 호버: 0.1 ~ 0.15</li>
+              <li>카메라 팔로우: 0.02 ~ 0.05</li>
+            </ul>
+          </div>
+          <div class="comparison-col">
+            <h4>Damping (감쇠)</h4>
+            <ul>
+              <li>높음(0.99) → 오래 흔들림 (탱탱볼)</li>
+              <li>낮음(0.85) → 빠르게 정지 (젤리)</li>
+              <li>공식: velocity *= damping</li>
+              <li>1.0 = 영원히 진동, 0.0 = 즉시 정지</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
+          <p><strong>활용 예시:</strong> UI 애니메이션, 카메라 따라가기, 커서 효과, 물리적 연결, 탄성 버튼, 스크롤 바운스</p>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 실무 팁</button>
+          <div class="notes-content">
+            <p><strong>왜 Spring이 "마법"인가:</strong> 가장 적은 코드로 가장 자연스러운 움직임을 만듭니다. lerp(선형 보간)보다 훨씬 생동감 있습니다.</p>
+            <p><strong>슬라이더 실험:</strong> Stiffness를 최대로 → 딱딱한 느낌. 최소로 → 나른한 느낌. Damping을 최소로 → 계속 흔들림. 최대로 → 한번에 멈춤.</p>
+            <p><strong>실무 꿀팁:</strong><br>
+            - iOS의 탄성 스크롤 = Spring + 낮은 damping<br>
+            - 마우스 커서 따라가기 = Spring + 중간 stiffness<br>
+            - 알림 팝업 등장 = Spring + 높은 stiffness, 낮은 damping (bounce 효과)</p>
+            <p><strong>주의:</strong> stiffness가 너무 높고 damping이 너무 높으면 진동이 발산할 수 있습니다. 실제로는 0.1 이하의 stiffness가 안전합니다.</p>
+            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+              <a href="https://www.joshwcomeau.com/animation/a-friendly-introduction-to-spring-physics/" target="_blank">A Friendly Intro to Spring Physics</a> ·
+              <a href="https://www.react-spring.dev/" target="_blank">react-spring 라이브러리</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="slider-group">
+          <span class="slider-label">Damping</span>
+          <input type="range" id="damping-slider" min="0.8" max="0.99" step="0.01" value="0.92">
+        </div>
+        <div class="slider-group">
+          <span class="slider-label">Stiffness</span>
+          <input type="range" id="stiffness-slider" min="0.01" max="0.15" step="0.01" value="0.08">
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 09: Constraint -->
+    <section class="slide has-controls" data-slide="9">
+      <canvas id="canvas-09"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <div class="section-header">
+          <span class="section-tag">Chapter 3: 구조</span>
+          <h2>Constraint: 형태는 <span class="keyword">유지</span>되는 것이다</h2>
+        </div>
+        <p style="margin: 1rem auto; max-width: 700px;">형태를 "그리는" 게 아니라, 물리적 제약을 통해 "유지"한다</p>
+
+        <div class="three-col" style="max-width: 900px; margin: 1.5rem auto;">
+          <div class="info-card">
+            <h4>📏 Distance Constraint</h4>
+            <p>두 점 사이 거리 유지<br>→ 체인, 로프, 천 구조</p>
+          </div>
+          <div class="info-card">
+            <h4>📍 <a href="https://matthias-research.github.io/pages/publications/posBasedDyn.pdf" target="_blank" style="color: #f87171; text-decoration: none;">Position Based Dynamics</a></h4>
+            <p>위치를 직접 조정<br>→ 속도 기반보다 안정적</p>
+          </div>
+          <div class="info-card">
+            <h4>🔄 Iterative Solving</h4>
+            <p>여러 번 반복 계산<br>→ 3~5회로 충분히 안정</p>
+          </div>
+        </div>
+
+        <div class="code-block" style="max-width: 700px; margin: 1rem auto; font-size: 0.9rem; text-align: left;">
+          <span class="comment">// Distance Constraint 해결 (핵심 알고리즘)</span><br>
+          diff = p2.pos - p1.pos<br>
+          distance = diff.length()<br>
+          correction = (restLength - distance) / distance × <span class="number">0.5</span><br>
+          p1.pos -= diff × correction&nbsp;&nbsp;<span class="comment">// 각각 절반씩 이동</span><br>
+          p2.pos += diff × correction
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 활용 사례</button>
+          <div class="notes-content">
+            <p><strong>데모 설명:</strong> Constraint ON 상태에서 천이 자연스럽게 늘어집니다. OFF로 끄면? 모든 점이 독립적으로 떨어져서 형태가 무너집니다.</p>
+            <p><strong>핵심 원리:</strong> "두 점 사이 거리가 원래 길이와 다르면, 두 점을 각각 절반씩 이동시켜 원래 길이로 복원한다." 이 단순한 규칙을 모든 연결에 반복 적용합니다.</p>
+            <p><strong>왜 반복(iteration)이 필요한가:</strong> 한 constraint를 풀면 다른 constraint가 깨집니다. 여러 번 반복하면 전체가 균형점에 수렴합니다. 보통 3~5회면 충분합니다.</p>
+            <p><strong>활용 사례:</strong><br>
+            - 천(Cloth) 시뮬레이션: 격자형 constraint 네트워크<br>
+            - 로프/체인: 일렬로 연결된 constraint<br>
+            - 소프트바디: 삼각형 메시 + constraint<br>
+            - 래그돌 물리: 관절 = constraint</p>
+            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+              <a href="https://www.youtube.com/watch?v=pBMivz4rIJY" target="_blank">Coding Train: Soft Body Physics</a> ·
+              <a href="https://gamedevelopment.tutsplus.com/tutorials/simulate-tearable-cloth-and-ragdolls-with-simple-verlet-integration--gamedev-519" target="_blank">Tearable Cloth Tutorial</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="toggle-btn active" data-constraint="on">Constraint ON</button>
+        <button class="toggle-btn" data-constraint="off">Constraint OFF</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Transition -->
+    <section class="slide" data-slide="10">
+      <canvas id="canvas-10"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <div class="comparison-table" style="max-width: 900px; margin: 0 auto 2rem;">
+          <div class="comparison-col" style="background: rgba(255,255,255,0.01);">
+            <h4 style="color: #888;">지금까지: 객체 중심</h4>
+            <p style="font-size: 1rem; color: #666;">Object-Centered Approach</p>
+            <ul style="margin-top: 1rem;">
+              <li>각 파티클이 자신의 규칙 보유</li>
+              <li>"나는 어떻게 움직일까?"</li>
+              <li>개별 행동 → 집단 패턴</li>
+            </ul>
+          </div>
+          <div class="comparison-col" style="background: rgba(248,113,113,0.05); border-color: rgba(248,113,113,0.2);">
+            <h4>이제부터: 공간 중심</h4>
+            <p style="font-size: 1rem; color: #666;">Space-Centered Approach</p>
+            <ul style="margin-top: 1rem;">
+              <li>공간에 규칙이 존재</li>
+              <li>"여기선 어느 방향으로?"</li>
+              <li>파티클은 공간을 따를 뿐</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin: 2rem 0; font-size: 3rem; color: #f87171;">⟳</div>
+
+        <p class="message">패러다임 전환: <span class="keyword">Flow Field</span></p>
+        <p style="margin-top: 1rem; font-size: 1.1rem; color: #888;">공간 자체에 방향성을 부여하면, 수천 개의 파티클이 자연스럽게 흐른다</p>
+
+        <div class="highlight-box" style="max-width: 600px; margin: 2rem auto;">
+          <p>발상의 전환: "파티클이 어떻게 움직일까?" → "이 위치에서 어느 방향으로?"</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Flow Field -->
+    <section class="slide has-controls" data-slide="11">
+      <canvas id="canvas-11"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <div class="section-header">
+          <span class="section-tag">Chapter 4: 공간</span>
+          <h2>Flow Field: <span class="keyword">보이지 않는 바람</span></h2>
+        </div>
+        <p style="margin: 1rem auto; max-width: 700px;">공간의 각 지점에 방향(벡터)을 할당. 파티클은 자신의 위치에서 방향을 읽고 따른다.</p>
+
+        <div class="comparison-table" style="max-width: 800px; margin: 1.5rem auto;">
+          <div class="comparison-col">
+            <h4>1. 필드 구조 정의</h4>
+            <div class="code-block" style="font-size: 0.85rem; text-align: left;">
+              <span class="comment">// 격자 기반 벡터 필드</span><br>
+              cols = width / resolution<br>
+              rows = height / resolution<br>
+              field[x][y] = noise(x, y) × 2π&nbsp;&nbsp;<span class="comment">// 각도</span>
+            </div>
+          </div>
+          <div class="comparison-col">
+            <h4>2. 파티클에 적용</h4>
+            <div class="code-block" style="font-size: 0.85rem; text-align: left;">
+              <span class="comment">// 위치에서 방향 읽기</span><br>
+              gridX = floor(pos.x / resolution)<br>
+              gridY = floor(pos.y / resolution)<br>
+              force = fromAngle(field[gridX][gridY])
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="max-width: 600px; margin: 1rem auto;">
+          <p>핵심: 파티클은 판단하지 않는다. <span class="keyword">"여기선 이 방향"</span>이라는 공간의 규칙을 따를 뿐.</p>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 구현 가이드</button>
+          <div class="notes-content">
+            <p><strong>데모 설명:</strong> "Show Vectors"를 켜면 각 셀의 방향이 화살표로 보입니다. 파티클은 자신이 위치한 셀의 화살표 방향으로 힘을 받습니다.</p>
+            <p><strong>해상도(resolution) 선택:</strong><br>
+            - 작은 값(10~20px): 세밀한 흐름, 계산 비용 높음<br>
+            - 큰 값(40~60px): 부드러운 흐름, 성능 좋음<br>
+            - 일반적으로 20~30px 추천</p>
+            <p><strong>필드 생성 방법:</strong><br>
+            - Perlin Noise: 부드러운 자연스러운 흐름<br>
+            - Simplex Noise: Perlin보다 빠르고 아티팩트 적음<br>
+            - 수학 함수: sin, cos 조합으로 특정 패턴 생성<br>
+            - 이미지 기반: 이미지의 밝기/색상을 각도로 변환</p>
+            <p><strong>시간 변화:</strong> noise(x, y, <strong>time</strong>)을 사용하면 필드가 시간에 따라 변합니다. 살아있는 바람처럼!</p>
+            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+              <a href="https://www.youtube.com/watch?v=BjoM9oKOAKY" target="_blank">Coding Train: Flow Fields</a> ·
+              <a href="https://tylerxhobbs.com/essays/2020/flow-fields" target="_blank">Tyler Hobbs: Flow Fields</a> ·
+              <a href="https://en.wikipedia.org/wiki/Perlin_noise" target="_blank">Perlin Noise (Wikipedia)</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="toggle-btn active" data-show="vectors">Show Vectors</button>
+        <button class="toggle-btn" data-show="particles">Particles Only</button>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: Curl Noise -->
+    <section class="slide has-controls" data-slide="12">
+      <canvas id="canvas-12"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <h2>Curl Noise = <span class="keyword">Organic Motion</span></h2>
+        <p style="margin: 1rem auto; max-width: 700px; font-size: 1.1rem;">회전(rotation)이 들어가면 생명이 생긴다. 연기, 물, 불꽃의 비밀.</p>
+
+        <div class="comparison-table" style="max-width: 800px; margin: 1.5rem auto;">
+          <div class="comparison-col">
+            <h4>❌ 일반 Noise 문제</h4>
+            <ul>
+              <li>각 위치에서 스칼라 값 반환</li>
+              <li>방향이 한 점으로 뭉침 (convergence)</li>
+              <li>파티클이 모여서 뭉치거나 사라짐</li>
+              <li>비현실적인 움직임</li>
+            </ul>
+          </div>
+          <div class="comparison-col">
+            <h4>✅ Curl Noise 해결</h4>
+            <ul>
+              <li>Noise의 회전(curl) 성분 계산</li>
+              <li>발산 없음 (divergence-free)</li>
+              <li>유체처럼 자연스럽게 흐름</li>
+              <li>절대 뭉치거나 발산하지 않음</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="code-block" style="max-width: 650px; margin: 1rem auto; font-size: 0.85rem; text-align: left;">
+          <span class="comment">// 2D Curl Noise - 핵심 공식</span><br>
+          eps = <span class="number">0.0001</span>&nbsp;&nbsp;<span class="comment">// 미분용 작은 값</span><br>
+          n1 = noise(x, y)<br>
+          n2 = noise(x, y + eps)<br>
+          n3 = noise(x + eps, y)<br>
+          curl.x = (n2 - n1) / eps&nbsp;&nbsp;<span class="comment">// ∂n/∂y (y방향 변화율)</span><br>
+          curl.y = -(n3 - n1) / eps&nbsp;&nbsp;<span class="comment">// -∂n/∂x (x방향 변화율의 음수)</span>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 수학적 배경</button>
+          <div class="notes-content">
+            <p><strong>왜 Curl인가:</strong> 벡터 미적분학에서 curl은 "회전"을 나타냅니다. 2D에서는 스칼라 필드의 gradient를 90도 회전시킨 것과 같습니다.</p>
+            <p><strong>divergence-free의 의미:</strong> 벡터장의 발산(divergence)이 0이면 "소스"나 "싱크"가 없습니다. 물이 한 곳에서 솟아나거나 빠져나가지 않고 그냥 흐릅니다.</p>
+            <p><strong>슬라이더 실험:</strong><br>
+            - Scale ↑: 더 큰 소용돌이, 느린 변화<br>
+            - Scale ↓: 작고 촘촘한 소용돌이<br>
+            - Intensity ↑: 더 빠른 움직임<br>
+            - Intensity ↓: 부드럽고 느린 흐름</p>
+            <p><strong>실무 활용:</strong> 연기, 안개, 물결, 오로라, 추상적 배경 애니메이션에 필수. Three.js, Unity, Unreal 모두 Curl Noise 지원.</p>
+            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+              <a href="https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph2007-curlnoise.pdf" target="_blank">Curl-Noise (Bridson 원논문)</a> ·
+              <a href="https://www.youtube.com/watch?v=sZBfLgfsvSk" target="_blank">Sebastian Lague: Procedural Landmass</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="slider-group">
+          <span class="slider-label">Scale</span>
+          <input type="range" id="curl-scale" min="0.001" max="0.01" step="0.0005" value="0.004">
+        </div>
+        <div class="slider-group">
+          <span class="slider-label">Intensity</span>
+          <input type="range" id="curl-intensity" min="0.5" max="3" step="0.1" value="1.5">
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 13: Easing -->
+    <section class="slide" data-slide="13">
+      <div class="slide-content">
+        <div class="section-header" style="text-align: center;">
+          <span class="section-tag">Chapter 5: 실용</span>
+          <h2><span class="keyword">Easing</span>: 물리가 필요 없을 때</h2>
+        </div>
+        <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem; color: #888;">최소 비용으로 자연스러운 움직임 만들기</p>
+
+        <div class="demo-container">
+          <div class="demo-box" style="width: 450px; height: 300px;">
+            <canvas id="canvas-13-linear"></canvas>
+            <span class="demo-label">Linear: t</span>
+          </div>
+          <div class="demo-box" style="width: 450px; height: 300px;">
+            <canvas id="canvas-13-smooth"></canvas>
+            <span class="demo-label">Smoothstep: t²(3-2t)</span>
+          </div>
+        </div>
+
+        <div class="comparison-table" style="max-width: 900px; margin: 1.5rem auto;">
+          <div class="comparison-col">
+            <h4>대표적인 Easing 함수</h4>
+            <div class="code-block" style="font-size: 0.85rem; text-align: left;">
+              linear(t) = t<br>
+              smoothstep(t) = t² × (3 - 2t)<br>
+              easeOutQuad(t) = 1 - (1-t)²<br>
+              easeOutElastic(t) = sin(-13π/2 × (t+1)) × 2^(-10t) + 1
+            </div>
+          </div>
+          <div class="comparison-col">
+            <h4>언제 사용하나?</h4>
+            <ul>
+              <li>✅ 시작/끝 지점이 명확할 때</li>
+              <li>✅ UI 전환, 페이드 인/아웃</li>
+              <li>✅ 정확한 타이밍 제어 필요</li>
+              <li>✅ 물리 시뮬 오버헤드가 과할 때</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
+          <p><span class="keyword">Easing vs Spring</span> — Easing은 "정해진 시간 내 완료", Spring은 "목표에 도달할 때까지"</p>
+        </div>
+
+        <div class="references" style="margin-top: 1.5rem;">
+          <h4>🔗 유용한 리소스</h4>
+          <div class="ref-grid">
+            <div class="ref-item">
+              <div class="ref-icon">📊</div>
+              <div>
+                <div class="ref-title">easings.net</div>
+                <div class="ref-desc">30+ easing 함수 시각화 및 코드</div>
+                <a href="https://easings.net" target="_blank">easings.net →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">🎮</div>
+              <div>
+                <div class="ref-title">cubic-bezier.com</div>
+                <div class="ref-desc">CSS cubic-bezier 커스텀 에디터</div>
+                <a href="https://cubic-bezier.com" target="_blank">cubic-bezier.com →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 14: Final System -->
+    <section class="slide has-controls" data-slide="14">
+      <canvas id="canvas-14"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <div class="section-header">
+          <span class="section-tag">Chapter 6: 통합</span>
+          <h2>One System, <span class="keyword">Infinite Variations</span></h2>
+        </div>
+        <p style="margin: 1rem auto; max-width: 700px;">지금까지 배운 모든 것을 하나의 시스템에 통합</p>
+
+        <div class="three-col" style="max-width: 800px; margin: 1.5rem auto;">
+          <div class="info-card">
+            <h4>🔗 구조 (Structure)</h4>
+            <p>Verlet Particles<br>+ Distance Constraints<br><span style="color: #666; font-size: 0.8rem;">→ 형태 유지</span></p>
+          </div>
+          <div class="info-card">
+            <h4>⚡ 힘 (Forces)</h4>
+            <p>Gravity + Spring<br>+ Curl Noise Flow<br><span style="color: #666; font-size: 0.8rem;">→ 움직임 생성</span></p>
+          </div>
+          <div class="info-card">
+            <h4>🎛️ 변화 (Variation)</h4>
+            <p>파라미터 조절로<br>완전히 다른 결과<br><span style="color: #666; font-size: 0.8rem;">→ 무한 변주</span></p>
+          </div>
+        </div>
+
+        <div class="code-block" style="max-width: 750px; margin: 1rem auto; font-size: 0.85rem; text-align: left;">
+          <span class="comment">// 통합 시스템의 핵심 루프</span><br>
+          <span class="keyword">for</span> (particle <span class="keyword">of</span> particles) {<br>
+          &nbsp;&nbsp;particle.applyForce(gravity);&nbsp;&nbsp;<span class="comment">// 1. 중력</span><br>
+          &nbsp;&nbsp;particle.applyForce(curlNoise(pos, time));&nbsp;&nbsp;<span class="comment">// 2. 플로우</span><br>
+          &nbsp;&nbsp;particle.applyForce(springToCenter(pos));&nbsp;&nbsp;<span class="comment">// 3. 구심력</span><br>
+          &nbsp;&nbsp;particle.update();&nbsp;&nbsp;<span class="comment">// 4. Verlet 통합</span><br>
+          }<br>
+          <span class="keyword">for</span> (constraint <span class="keyword">of</span> constraints) {<br>
+          &nbsp;&nbsp;constraint.solve();&nbsp;&nbsp;<span class="comment">// 5. 거리 제약 해결</span><br>
+          }
+        </div>
+
+        <div class="highlight-box" style="max-width: 600px; margin: 1rem auto;">
+          <p>결과물이 아니라 <span class="keyword">시스템</span>을 만들어라. 슬라이더를 조절해보세요!</p>
+        </div>
+
+        <div class="speaker-notes">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 시스템 설계 철학</button>
+          <div class="notes-content">
+            <p><strong>데모 가이드:</strong> 3개의 슬라이더를 각각 극단적으로 움직여보세요.<br>
+            - Flow만 최대: 바람에 날리는 깃발<br>
+            - Gravity만 최대: 무거운 체인<br>
+            - Spring만 최대: 중심으로 빨려드는 형태<br>
+            - 세 가지 조합: 각각 다른 "성격"을 가진 생명체</p>
+            <p><strong>핵심 통찰:</strong> 이 데모에서 변경한 코드는 0줄입니다. 파라미터만 바꿨을 뿐. 잘 설계된 시스템은 코드 수정 없이 무한한 변주가 가능합니다.</p>
+            <p><strong>실무 적용:</strong><br>
+            - 게임 VFX: 동일 시스템으로 불, 물, 연기, 마법 이펙트<br>
+            - 웹 인터랙션: 마우스 반응형 배경 애니메이션<br>
+            - 데이터 시각화: 노드-링크 다이어그램의 물리적 배치<br>
+            - 제너러티브 아트: 동일 알고리즘, 다른 시드값 = 다른 작품</p>
+            <p><strong>확장 아이디어:</strong> 더 많은 힘 추가 (마찰, 반발력, 자기장), 더 복잡한 구조 (2D 천, 3D 메시), 사용자 상호작용 (터치/마우스로 힘 적용)</p>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="slider-group">
+          <span class="slider-label">Flow</span>
+          <input type="range" id="final-flow" min="0" max="2" step="0.1" value="0.5">
+        </div>
+        <div class="slider-group">
+          <span class="slider-label">Spring</span>
+          <input type="range" id="final-spring" min="0" max="0.1" step="0.005" value="0.02">
+        </div>
+        <div class="slider-group">
+          <span class="slider-label">Gravity</span>
+          <input type="range" id="final-gravity" min="0" max="0.5" step="0.02" value="0.1">
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 15: Closing -->
+    <section class="slide" data-slide="15">
+      <canvas id="canvas-15"></canvas>
+      <div class="slide-content" style="text-align: center;">
+        <div class="section-header">
+          <span class="section-tag">Closing</span>
+          <p class="message">Procedural Art는 완성형이 아니라<br><span class="keyword">계속 변하는 상태</span>다</p>
+        </div>
+
+        <div class="description" style="max-width: 700px; margin: 2rem auto;">
+          <ul class="bullet-list" style="text-align: left;">
+            <li>움직임의 본질은 <strong>시간에 따른 변화 규칙</strong></li>
+            <li>물리 시뮬레이션은 <strong>창작 도구</strong>로 활용</li>
+            <li>정확성보다 <strong>느낌</strong>이 중요</li>
+            <li>하나의 시스템으로 <strong>무한한 변주</strong></li>
+          </ul>
+        </div>
+
+        <p class="subtitle" style="margin-top: 1.5rem; font-size: 1.3rem; color: #f87171;">
+          Form → Motion → Behavior → System
+        </p>
+
+        <div class="speaker-notes" style="margin-top: 2rem;">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 마무리 노트</button>
+          <div class="notes-content">
+            <p><strong>마무리 멘트:</strong> "오늘 배운 것들은 물리학이 아닙니다. 물리학의 아이디어를 빌려온 창작 도구입니다. 정확할 필요 없습니다. '느낌'이 맞으면 됩니다."</p>
+            <p><strong>청중에게 던질 질문:</strong> "여러분이 만들고 싶은 움직임은 어떤 성격인가요? 무겁고 느린? 가볍고 탄성 있는? 유기적이고 흐르는? 오늘 배운 도구들로 그 성격을 코드로 표현해보세요."</p>
+            <p><strong>다음 스텝 제안:</strong><br>
+            1. 이 프레젠테이션의 코드를 직접 수정해보기<br>
+            2. p5.js로 간단한 파티클 시스템 만들기<br>
+            3. The Nature of Code 책/영상 학습<br>
+            4. 하루에 작은 실험 하나씩 시도</p>
+            <p><strong>추천 첫 프로젝트:</strong> "마우스를 따라다니는 점 100개" - Particle + Force + Spring만으로 만들 수 있는 가장 간단하면서도 매력적인 인터랙션입니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 16: Resources -->
+    <section class="slide" data-slide="16">
+      <div class="slide-content" style="text-align: center;">
+        <div class="section-header">
+          <span class="section-tag">Resources</span>
+          <h2><span class="keyword">학습 자료</span> & 다음 단계</h2>
+        </div>
+        <p style="margin-bottom: 2rem; color: #888;">Creative Coding 여정을 위한 추천 자료들</p>
+
+        <div class="references" style="max-width: 1000px; margin: 0 auto;">
+          <h4>📚 필수 도서 & 강의</h4>
+          <div class="ref-grid">
+            <div class="ref-item">
+              <div class="ref-icon">📖</div>
+              <div>
+                <div class="ref-title">The Nature of Code</div>
+                <div class="ref-desc">Daniel Shiffman. 물리 기반 크리에이티브 코딩의 바이블. 무료 온라인 버전 제공.</div>
+                <a href="https://natureofcode.com" target="_blank">natureofcode.com →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">🎬</div>
+              <div>
+                <div class="ref-title">The Coding Train</div>
+                <div class="ref-desc">YouTube 채널. 시각적으로 이해하기 쉬운 코딩 튜토리얼.</div>
+                <a href="https://thecodingtrain.com" target="_blank">thecodingtrain.com →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">🎓</div>
+              <div>
+                <div class="ref-title">Generative Design</div>
+                <div class="ref-desc">Benedikt Gross 외. 알고리즘 기반 디자인의 교과서.</div>
+                <a href="http://www.generative-gestaltung.de" target="_blank">generative-gestaltung.de →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">📘</div>
+              <div>
+                <div class="ref-title">Game Programming Patterns</div>
+                <div class="ref-desc">Bob Nystrom. 게임 루프, 상태 패턴 등 구조적 접근법.</div>
+                <a href="https://gameprogrammingpatterns.com" target="_blank">gameprogrammingpatterns.com →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="references" style="max-width: 1000px; margin: 1.5rem auto;">
+          <h4>🛠️ 라이브러리 & 프레임워크</h4>
+          <div class="ref-grid">
+            <div class="ref-item">
+              <div class="ref-icon">🎨</div>
+              <div>
+                <div class="ref-title">p5.js</div>
+                <div class="ref-desc">가장 접근하기 쉬운 크리에이티브 코딩 라이브러리. Processing의 JS 버전.</div>
+                <a href="https://p5js.org" target="_blank">p5js.org →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">🌐</div>
+              <div>
+                <div class="ref-title">Three.js</div>
+                <div class="ref-desc">WebGL 기반 3D 그래픽스. 파티클 시스템, 셰이더 지원.</div>
+                <a href="https://threejs.org" target="_blank">threejs.org →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">⚡</div>
+              <div>
+                <div class="ref-title">Matter.js</div>
+                <div class="ref-desc">2D 물리 엔진. 강체, 충돌, 제약조건 시뮬레이션.</div>
+                <a href="https://brm.io/matter-js" target="_blank">brm.io/matter-js →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">🔬</div>
+              <div>
+                <div class="ref-title">Cannon.js / Rapier</div>
+                <div class="ref-desc">3D 물리 엔진. Three.js와 함께 사용하기 좋음.</div>
+                <a href="https://rapier.rs" target="_blank">rapier.rs →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="references" style="max-width: 1000px; margin: 1.5rem auto;">
+          <h4>🌟 영감을 주는 곳들</h4>
+          <div class="ref-grid">
+            <div class="ref-item">
+              <div class="ref-icon">🖼️</div>
+              <div>
+                <div class="ref-title">OpenProcessing</div>
+                <div class="ref-desc">Processing/p5.js 작품 공유 플랫폼. 코드 공개.</div>
+                <a href="https://openprocessing.org" target="_blank">openprocessing.org →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">✨</div>
+              <div>
+                <div class="ref-title">Shadertoy</div>
+                <div class="ref-desc">GLSL 셰이더 작품들. 고급 비주얼 기법 학습.</div>
+                <a href="https://shadertoy.com" target="_blank">shadertoy.com →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">🎯</div>
+              <div>
+                <div class="ref-title">CodePen</div>
+                <div class="ref-desc">웹 기반 코드 실험 플랫폼. Creative Coding 태그 검색.</div>
+                <a href="https://codepen.io" target="_blank">codepen.io →</a>
+              </div>
+            </div>
+            <div class="ref-item">
+              <div class="ref-icon">📱</div>
+              <div>
+                <div class="ref-title">#genart / #creativecoding</div>
+                <div class="ref-desc">Twitter/X, Instagram 해시태그. 최신 트렌드와 영감.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="speaker-notes" style="margin-top: 1.5rem;">
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 자료 소개 노트</button>
+          <div class="notes-content">
+            <p><strong>입문자 추천 학습 경로:</strong><br>
+            1. p5.js 공식 튜토리얼 (Get Started)<br>
+            2. The Coding Train "Nature of Code" 시리즈<br>
+            3. Nature of Code 책 Chapter 1-4<br>
+            4. OpenProcessing에서 예제 분석하며 따라하기</p>
+            <p><strong>중급자 추천:</strong><br>
+            1. Three.js Journey (Bruno Simon) - 유료지만 최고 퀄리티<br>
+            2. Shadertoy에서 셰이더 기초 학습<br>
+            3. Matter.js로 물리 게임 만들기<br>
+            4. Generative Design 책으로 알고리즘 깊이 파기</p>
+            <p><strong>커뮤니티 참여:</strong> Creative Coding Seoul 밋업, #genart 해시태그, Discord 커뮤니티(Genuary, Creative Coding 등)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button id="prev-btn">←</button>
+      <button id="next-btn">→</button>
+    </div>
+    <div class="slide-number"><span id="current-slide">01</span> / 16</div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
