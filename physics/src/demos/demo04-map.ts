@@ -1,5 +1,5 @@
-import { Vector } from '../physics/vector';
 import { noise } from '../physics/noise';
+import { Vector } from '../physics/vector';
 
 interface MapParticle {
   pos: Vector;
@@ -36,12 +36,9 @@ export class Demo04Map {
     for (let i = 0; i < 80; i++) {
       this.particles.push({
         pos: new Vector(Math.random() * w, Math.random() * h),
-        vel: new Vector(
-          (Math.random() - 0.5) * 0.5,
-          (Math.random() - 0.5) * 0.5
-        ),
+        vel: new Vector((Math.random() - 0.5) * 0.5, (Math.random() - 0.5) * 0.5),
         target: Math.floor(Math.random() * 5),
-        alpha: 0.2 + Math.random() * 0.3
+        alpha: 0.2 + Math.random() * 0.3,
       });
     }
 

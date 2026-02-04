@@ -1,5 +1,5 @@
-import { Vector } from '../physics/vector';
 import { noise } from '../physics/noise';
+import { Vector } from '../physics/vector';
 
 interface TransitionParticle {
   pos: Vector;
@@ -47,7 +47,7 @@ export class Demo10Transition {
           pos: new Vector(x, y),
           vel: new Vector(0, 0),
           basePos: new Vector(x, y),
-          phase: (i + j) * 0.3
+          phase: (i + j) * 0.3,
         });
       }
     }

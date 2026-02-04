@@ -15,7 +15,6 @@ export class Demo07Integration {
   private ctxVerlet: CanvasRenderingContext2D;
   private eulerParticle: IntegrationParticle;
   private verletParticle: IntegrationParticle;
-  private time: number = 0;
   private animationId: number = 0;
   private mouseEuler: Vector;
   private mouseVerlet: Vector;
@@ -41,12 +40,12 @@ export class Demo07Integration {
       vel: new Vector(0, 0),
       oldPos: new Vector(0, 0),
       acc: new Vector(0, 0),
-      trail: []
+      trail: [],
     };
   }
 
   private resize(): void {
-    [this.canvasEuler, this.canvasVerlet].forEach(canvas => {
+    [this.canvasEuler, this.canvasVerlet].forEach((canvas) => {
       const parent = canvas.parentElement!;
       const w = parent.offsetWidth;
       const h = parent.offsetHeight;
@@ -56,12 +55,12 @@ export class Demo07Integration {
       canvas.height = h * dpr;
       const ctx = canvas.getContext('2d')!;
       ctx.scale(dpr, dpr);
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
     });
 
-    const w = this.canvasEuler.parentElement!.offsetWidth;
-    const h = this.canvasEuler.parentElement!.offsetHeight;
+    const w = this.canvasEuler.parentElement?.offsetWidth;
+    const h = this.canvasEuler.parentElement?.offsetHeight;
 
     this.eulerParticle.pos = new Vector(w / 2, h / 2);
     this.eulerParticle.oldPos = this.eulerParticle.pos.copy();
@@ -192,7 +191,7 @@ export class Demo07Integration {
     p: IntegrationParticle,
     w: number,
     h: number,
-    mouse: Vector
+    mouse: Vector,
   ): void {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
     ctx.fillRect(0, 0, w, h);

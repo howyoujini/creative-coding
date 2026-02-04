@@ -1,5 +1,5 @@
+import { Constraint, VerletParticle } from '../physics/particle';
 import { Vector } from '../physics/vector';
-import { VerletParticle, Constraint } from '../physics/particle';
 
 export class Demo09Constraint {
   private canvas: HTMLCanvasElement;
@@ -10,6 +10,14 @@ export class Demo09Constraint {
   private draggedParticle: VerletParticle | null = null;
   private animationId: number = 0;
   private constraintEnabled: boolean = true;
+
+  // Controllable parameters
+  private gravity: number = 0.3;
+  private friction: number = 0.99;
+  private stiffness: number = 1.0;
+  private iterations: number = 3;
+  private cols: number = 12;
+  private rows: number = 8;
 
   constructor(canvasId: string) {
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -28,14 +36,66 @@ export class Demo09Constraint {
   }
 
   private setupControls(): void {
+    // Toggle buttons
     const buttons = document.querySelectorAll('[data-constraint]');
-    buttons.forEach(btn => {
+    buttons.forEach((btn) => {
       btn.addEventListener('click', () => {
-        buttons.forEach(b => b.classList.remove('active'));
+        buttons.forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         this.constraintEnabled = btn.getAttribute('data-constraint') === 'on';
       });
     });
+
+    // Parameter sliders
+    this.setupSlider('constraint-gravity', (v) => {
+      this.gravity = v;
+      this.updateValueDisplay('constraint-gravity-value', v.toFixed(2));
+    });
+
+    this.setupSlider('constraint-friction', (v) => {
+      this.friction = v;
+      this.updateValueDisplay('constraint-friction-value', v.toFixed(3));
+    });
+
+    this.setupSlider('constraint-stiffness', (v) => {
+      this.stiffness = v;
+      this.updateValueDisplay('constraint-stiffness-value', v.toFixed(2));
+      // Update all constraint stiffness
+      for (const c of this.constraints) {
+        c.stiffness = v;
+      }
+    });
+
+    this.setupSlider('constraint-iterations', (v) => {
+      this.iterations = Math.floor(v);
+      this.updateValueDisplay('constraint-iterations-value', this.iterations.toString());
+    });
+
+    this.setupSlider('constraint-cols', (v) => {
+      this.cols = Math.floor(v);
+      this.updateValueDisplay('constraint-cols-value', this.cols.toString());
+      this.rebuildCloth();
+    });
+
+    this.setupSlider('constraint-rows', (v) => {
+      this.rows = Math.floor(v);
+      this.updateValueDisplay('constraint-rows-value', this.rows.toString());
+      this.rebuildCloth();
+    });
+  }
+
+  private setupSlider(id: string, callback: (value: number) => void): void {
+    const slider = document.getElementById(id) as HTMLInputElement;
+    if (slider) {
+      slider.addEventListener('input', (e) => {
+        callback(parseFloat((e.target as HTMLInputElement).value));
+      });
+    }
+  }
+
+  private updateValueDisplay(id: string, value: string): void {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
   }
 
   private setupMouse(): void {
@@ -82,59 +142,66 @@ export class Demo09Constraint {
     return nearest;
   }
 
-  start(): void {
+  private rebuildCloth(): void {
     const w = this.canvas.offsetWidth;
 
     this.particles = [];
     this.constraints = [];
 
-    // Create a cloth-like structure
-    const cols = 12;
-    const rows = 8;
-    const spacing = 30;
-    const startX = (w - (cols - 1) * spacing) / 2;
+    // Calculate spacing based on grid size
+    const maxWidth = w * 0.8;
+    const spacing = Math.min(30, maxWidth / (this.cols - 1));
+    const startX = (w - (this.cols - 1) * spacing) / 2;
     const startY = 80;
 
     // Create particles
-    for (let j = 0; j < rows; j++) {
-      for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < this.rows; j++) {
+      for (let i = 0; i < this.cols; i++) {
         const x = startX + i * spacing;
         const y = startY + j * spacing;
-        const pinned = j === 0 && (i === 0 || i === Math.floor(cols / 2) || i === cols - 1);
+        // Pin top row at regular intervals
+        const pinInterval = Math.max(1, Math.floor(this.cols / 4));
+        const pinned = j === 0 && (i % pinInterval === 0 || i === this.cols - 1);
 
-        this.particles.push(new VerletParticle(x, y, {
-          pinned,
-          radius: pinned ? 6 : 4,
-          color: pinned ? '#fbbf24' : '#f87171'
-        }));
+        this.particles.push(
+          new VerletParticle(x, y, {
+            pinned,
+            radius: pinned ? 6 : 4,
+            color: '#f87171',
+          }),
+        );
       }
     }
 
     // Create constraints (horizontal and vertical)
-    for (let j = 0; j < rows; j++) {
-      for (let i = 0; i < cols; i++) {
-        const idx = j * cols + i;
+    for (let j = 0; j < this.rows; j++) {
+      for (let i = 0; i < this.cols; i++) {
+        const idx = j * this.cols + i;
 
         // Horizontal
-        if (i < cols - 1) {
-          this.constraints.push(new Constraint(
-            this.particles[idx],
-            this.particles[idx + 1],
-            spacing
-          ));
+        if (i < this.cols - 1) {
+          this.constraints.push(
+            new Constraint(this.particles[idx], this.particles[idx + 1], spacing, this.stiffness),
+          );
         }
 
         // Vertical
-        if (j < rows - 1) {
-          this.constraints.push(new Constraint(
-            this.particles[idx],
-            this.particles[idx + cols],
-            spacing
-          ));
+        if (j < this.rows - 1) {
+          this.constraints.push(
+            new Constraint(
+              this.particles[idx],
+              this.particles[idx + this.cols],
+              spacing,
+              this.stiffness,
+            ),
+          );
         }
       }
     }
+  }
 
+  start(): void {
+    this.rebuildCloth();
     this.animate();
   }
 
@@ -154,19 +221,19 @@ export class Demo09Constraint {
     this.ctx.fillRect(0, 0, w, h);
 
     // Apply gravity
-    const gravity = new Vector(0, 0.3);
+    const gravityForce = new Vector(0, this.gravity);
     for (const p of this.particles) {
-      p.applyForce(gravity);
+      p.applyForce(gravityForce);
     }
 
     // Update particles
     for (const p of this.particles) {
-      p.update(0.99);
+      p.update(this.friction);
     }
 
     // Solve constraints multiple times for stability
     if (this.constraintEnabled) {
-      for (let iter = 0; iter < 3; iter++) {
+      for (let iter = 0; iter < this.iterations; iter++) {
         for (const c of this.constraints) {
           c.solve();
         }
@@ -188,7 +255,11 @@ export class Demo09Constraint {
       this.ctx.lineTo(c.p2.pos.x, c.p2.pos.y);
 
       if (this.constraintEnabled) {
-        this.ctx.strokeStyle = 'rgba(248, 113, 113, 0.4)';
+        // Show tension based on stretch
+        const currentLength = Vector.dist(c.p1.pos, c.p2.pos);
+        const stretch = Math.abs(currentLength - c.length) / c.length;
+        const tension = Math.min(stretch * 5, 1);
+        this.ctx.strokeStyle = `rgba(${248 + 7 * tension}, ${113 - 113 * tension + 204 * tension}, ${113 - 113 * tension + 21 * tension}, ${0.4 + tension * 0.4})`;
       } else {
         // Show stretching when constraints off
         const stretch = Math.abs(Vector.dist(c.p1.pos, c.p2.pos) - c.length);
@@ -212,6 +283,9 @@ export class Demo09Constraint {
     this.ctx.fillStyle = '#666';
     this.ctx.font = '12px monospace';
     this.ctx.fillText(`constraint: ${this.constraintEnabled ? 'ON' : 'OFF'}`, 15, 25);
+    this.ctx.fillText(`iterations: ${this.iterations}`, 15, 45);
+    this.ctx.fillText(`stiffness: ${this.stiffness.toFixed(2)}`, 15, 65);
+    this.ctx.fillText(`grid: ${this.cols}x${this.rows}`, 15, 85);
     this.ctx.fillText('drag particles to interact', 15, h - 15);
   };
 }

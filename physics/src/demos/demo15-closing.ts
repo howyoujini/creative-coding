@@ -1,5 +1,5 @@
-import { Vector } from '../physics/vector';
 import { curlNoise } from '../physics/noise';
+import { Vector } from '../physics/vector';
 
 interface ClosingParticle {
   pos: Vector;
@@ -41,10 +41,22 @@ export class Demo15Closing {
       // Edge spawn
       const edge = Math.floor(Math.random() * 4);
       switch (edge) {
-        case 0: x = Math.random() * w; y = 0; break;
-        case 1: x = w; y = Math.random() * h; break;
-        case 2: x = Math.random() * w; y = h; break;
-        default: x = 0; y = Math.random() * h; break;
+        case 0:
+          x = Math.random() * w;
+          y = 0;
+          break;
+        case 1:
+          x = w;
+          y = Math.random() * h;
+          break;
+        case 2:
+          x = Math.random() * w;
+          y = h;
+          break;
+        default:
+          x = 0;
+          y = Math.random() * h;
+          break;
       }
     } else {
       // Center spawn
@@ -58,7 +70,7 @@ export class Demo15Closing {
       trail: [],
       hue: 0 + Math.random() * 15, // Red range
       life: 0,
-      maxLife: 200 + Math.random() * 200
+      maxLife: 200 + Math.random() * 200,
     };
   }
 
@@ -144,9 +156,13 @@ export class Demo15Closing {
       }
 
       // Reset if out of bounds or dead
-      if (p.pos.x < -100 || p.pos.x > w + 100 ||
-          p.pos.y < -100 || p.pos.y > h + 100 ||
-          p.life > p.maxLife) {
+      if (
+        p.pos.x < -100 ||
+        p.pos.x > w + 100 ||
+        p.pos.y < -100 ||
+        p.pos.y > h + 100 ||
+        p.life > p.maxLife
+      ) {
         const newP = this.createParticle();
         p.pos = newP.pos;
         p.vel = newP.vel;

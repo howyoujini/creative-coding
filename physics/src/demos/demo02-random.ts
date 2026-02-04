@@ -1,5 +1,5 @@
-import { Vector } from '../physics/vector';
 import { noise } from '../physics/noise';
+import { Vector } from '../physics/vector';
 
 interface Dot {
   pos: Vector;
@@ -40,10 +40,10 @@ export class Demo02Random {
     this.ctxLeft.scale(dpr, dpr);
     this.ctxRight.scale(dpr, dpr);
 
-    this.canvasLeft.style.width = w + 'px';
-    this.canvasLeft.style.height = h + 'px';
-    this.canvasRight.style.width = w + 'px';
-    this.canvasRight.style.height = h + 'px';
+    this.canvasLeft.style.width = `${w}px`;
+    this.canvasLeft.style.height = `${h}px`;
+    this.canvasRight.style.width = `${w}px`;
+    this.canvasRight.style.height = `${h}px`;
   }
 
   start(): void {
@@ -69,14 +69,14 @@ export class Demo02Random {
           pos: new Vector(x, y),
           vel: new Vector(0, 0),
           basePos: new Vector(x, y),
-          phase: Math.random() * Math.PI * 2
+          phase: Math.random() * Math.PI * 2,
         });
 
         this.dotsRight.push({
           pos: new Vector(x, y),
           vel: new Vector(0, 0),
           basePos: new Vector(x, y),
-          phase: (i + j) * 0.5
+          phase: (i + j) * 0.5,
         });
       }
     }

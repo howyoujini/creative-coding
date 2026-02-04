@@ -99,7 +99,7 @@ export class Demo08Spring {
           pos: new Vector(x, y),
           vel: new Vector(0, 0),
           target: new Vector(x, y),
-          trail: []
+          trail: [],
         });
       }
     }

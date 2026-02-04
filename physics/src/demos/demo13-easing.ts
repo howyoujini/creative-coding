@@ -46,7 +46,7 @@ export class Demo13Easing {
   }
 
   private resize(): void {
-    [this.canvasLinear, this.canvasSmooth].forEach(canvas => {
+    [this.canvasLinear, this.canvasSmooth].forEach((canvas) => {
       const parent = canvas.parentElement!;
       const w = parent.offsetWidth;
       const h = parent.offsetHeight;
@@ -56,8 +56,8 @@ export class Demo13Easing {
       canvas.height = h * dpr;
       const ctx = canvas.getContext('2d')!;
       ctx.scale(dpr, dpr);
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
     });
   }
 
@@ -77,7 +77,7 @@ export class Demo13Easing {
         startX: margin,
         endX: w - margin,
         progress: 0,
-        delay: i * 0.1
+        delay: i * 0.1,
       };
       this.dotsLinear.push({ ...dot });
       this.dotsSmooth.push({ ...dot });
@@ -137,7 +137,10 @@ export class Demo13Easing {
       const dotSmooth = this.dotsSmooth[i];
 
       // Apply delay
-      const delayedProgress = Math.max(0, Math.min(1, (adjustedProgress - dotLinear.delay) / (1 - dotLinear.delay * 2)));
+      const delayedProgress = Math.max(
+        0,
+        Math.min(1, (adjustedProgress - dotLinear.delay) / (1 - dotLinear.delay * 2)),
+      );
 
       // Linear easing
       const linearEased = linear(delayedProgress);
@@ -170,7 +173,7 @@ export class Demo13Easing {
     w: number,
     _h: number,
     easingFn: (t: number) => number,
-    label: string
+    label: string,
   ): void {
     const curveW = 80;
     const curveH = 60;
