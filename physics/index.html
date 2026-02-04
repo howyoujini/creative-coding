@@ -77,6 +77,32 @@
       display: none; /* Chrome, Safari, Opera */
     }
 
+    /* Scrollbar visible mode */
+    body.show-scrollbar .slide-content {
+      scrollbar-width: auto;
+      -ms-overflow-style: auto;
+      pointer-events: auto;
+    }
+
+    body.show-scrollbar .slide-content::-webkit-scrollbar {
+      display: auto; /* Chrome, Safari, Opera */
+      width: 8px;
+    }
+
+    body.show-scrollbar .slide-content::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+
+    body.show-scrollbar .slide-content::-webkit-scrollbar-thumb {
+      background: rgba(248, 113, 113, 0.4);
+      border-radius: 4px;
+    }
+
+    body.show-scrollbar .slide-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(248, 113, 113, 0.6);
+    }
+
     .slide-content.interactive {
       pointer-events: auto;
     }
@@ -400,6 +426,12 @@
     .nav button:hover {
       background: rgba(255,255,255,0.1);
       color: #fff;
+    }
+
+    .nav button.active {
+      background: rgba(248, 113, 113, 0.3);
+      border-color: rgba(248, 113, 113, 0.5);
+      color: #f87171;
     }
 
     .progress {
@@ -798,7 +830,7 @@
       flex-wrap: wrap;
       gap: 15px;
       justify-content: center;
-      max-width: 800px;
+      max-width: 1000px;
     }
 
     .control-group {
@@ -1149,7 +1181,7 @@
           </div>
         </div>
       </div>
-      <div class="controls" style="flex-wrap: wrap; max-width: 900px;">
+      <div class="controls">
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
           <button class="toggle-btn" data-force="gravity">Gravity</button>
           <button class="toggle-btn active" data-force="attract">Attract</button>
@@ -1423,7 +1455,7 @@
           </div>
         </div>
       </div>
-      <div class="controls" style="flex-wrap: wrap; max-width: 900px;">
+      <div class="controls">
         <button class="toggle-btn active" data-constraint="on">Constraint ON</button>
         <button class="toggle-btn" data-constraint="off">Constraint OFF</button>
         <div class="control-group">
@@ -2005,6 +2037,7 @@
     </section>
 
     <div class="nav">
+      <button id="scrollbar-toggle" title="Toggle Pointer Events">🖱️</button>
       <button id="prev-btn">←</button>
       <button id="next-btn">→</button>
     </div>

@@ -35,9 +35,15 @@ class Presentation {
   private setupNavigation(): void {
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
+    const scrollbarToggle = document.getElementById('scrollbar-toggle');
 
     prevBtn?.addEventListener('click', () => this.goToSlide(this.currentSlide - 1));
     nextBtn?.addEventListener('click', () => this.goToSlide(this.currentSlide + 1));
+
+    scrollbarToggle?.addEventListener('click', () => {
+      document.body.classList.toggle('show-scrollbar');
+      scrollbarToggle.classList.toggle('active');
+    });
   }
 
   private setupKeyboardNavigation(): void {
