@@ -1,6 +1,6 @@
-import { Vector } from '../physics/vector';
-import { VerletParticle, Constraint } from '../physics/particle';
 import { curlNoise } from '../physics/noise';
+import { Constraint, VerletParticle } from '../physics/particle';
+import { Vector } from '../physics/vector';
 
 export class Demo14Final {
   private canvas: HTMLCanvasElement;
@@ -68,7 +68,7 @@ export class Demo14Final {
     this.centerParticle = new VerletParticle(cx, cy, {
       pinned: true,
       radius: 10,
-      color: '#fbbf24'
+      color: '#f87171',
     });
     this.particles.push(this.centerParticle);
 
@@ -88,18 +88,13 @@ export class Demo14Final {
 
         const particle = new VerletParticle(x, y, {
           radius: 3 + (chainLength - i) * 0.3,
-          color: `rgba(248, 113, 113, ${0.5 + (chainLength - i) / chainLength * 0.5})`
+          color: `rgba(248, 113, 113, ${0.5 + ((chainLength - i) / chainLength) * 0.5})`,
         });
 
         this.particles.push(particle);
 
         // Create constraint to previous particle
-        this.constraints.push(new Constraint(
-          prevParticle,
-          particle,
-          segmentLength,
-          0.8
-        ));
+        this.constraints.push(new Constraint(prevParticle, particle, segmentLength, 0.8));
 
         prevParticle = particle;
       }
@@ -109,14 +104,12 @@ export class Demo14Final {
     for (let i = 0; i < 50; i++) {
       const angle = Math.random() * Math.PI * 2;
       const dist = 100 + Math.random() * 200;
-      this.particles.push(new VerletParticle(
-        cx + Math.cos(angle) * dist,
-        cy + Math.sin(angle) * dist,
-        {
+      this.particles.push(
+        new VerletParticle(cx + Math.cos(angle) * dist, cy + Math.sin(angle) * dist, {
           radius: 2,
-          color: 'rgba(248, 113, 113, 0.6)'
-        }
-      ));
+          color: 'rgba(248, 113, 113, 0.6)',
+        }),
+      );
     }
 
     this.animate();

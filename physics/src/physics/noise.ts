@@ -3,9 +3,18 @@ const F2 = 0.5 * (Math.sqrt(3) - 1);
 const G2 = (3 - Math.sqrt(3)) / 6;
 
 const grad3 = [
-  [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0],
-  [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1],
-  [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]
+  [1, 1, 0],
+  [-1, 1, 0],
+  [1, -1, 0],
+  [-1, -1, 0],
+  [1, 0, 1],
+  [-1, 0, 1],
+  [1, 0, -1],
+  [-1, 0, -1],
+  [0, 1, 1],
+  [0, -1, 1],
+  [0, 1, -1],
+  [0, -1, -1],
 ];
 
 class SimplexNoise {
@@ -30,7 +39,9 @@ class SimplexNoise {
   }
 
   noise2D(x: number, y: number): number {
-    let n0 = 0, n1 = 0, n2 = 0;
+    let n0 = 0,
+      n1 = 0,
+      n2 = 0;
 
     const s = (x + y) * F2;
     const i = Math.floor(x + s);
@@ -104,13 +115,51 @@ class SimplexNoise {
     let i2: number, j2: number, k2: number;
 
     if (x0 >= y0) {
-      if (y0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 1; k2 = 0; }
-      else if (x0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 0; k2 = 1; }
-      else { i1 = 0; j1 = 0; k1 = 1; i2 = 1; j2 = 0; k2 = 1; }
+      if (y0 >= z0) {
+        i1 = 1;
+        j1 = 0;
+        k1 = 0;
+        i2 = 1;
+        j2 = 1;
+        k2 = 0;
+      } else if (x0 >= z0) {
+        i1 = 1;
+        j1 = 0;
+        k1 = 0;
+        i2 = 1;
+        j2 = 0;
+        k2 = 1;
+      } else {
+        i1 = 0;
+        j1 = 0;
+        k1 = 1;
+        i2 = 1;
+        j2 = 0;
+        k2 = 1;
+      }
     } else {
-      if (y0 < z0) { i1 = 0; j1 = 0; k1 = 1; i2 = 0; j2 = 1; k2 = 1; }
-      else if (x0 < z0) { i1 = 0; j1 = 1; k1 = 0; i2 = 0; j2 = 1; k2 = 1; }
-      else { i1 = 0; j1 = 1; k1 = 0; i2 = 1; j2 = 1; k2 = 0; }
+      if (y0 < z0) {
+        i1 = 0;
+        j1 = 0;
+        k1 = 1;
+        i2 = 0;
+        j2 = 1;
+        k2 = 1;
+      } else if (x0 < z0) {
+        i1 = 0;
+        j1 = 1;
+        k1 = 0;
+        i2 = 0;
+        j2 = 1;
+        k2 = 1;
+      } else {
+        i1 = 0;
+        j1 = 1;
+        k1 = 0;
+        i2 = 1;
+        j2 = 1;
+        k2 = 0;
+      }
     }
 
     const x1 = x0 - i1 + G3;
@@ -131,7 +180,10 @@ class SimplexNoise {
     const gi2 = this.permMod12[ii + i2 + this.perm[jj + j2 + this.perm[kk + k2]]];
     const gi3 = this.permMod12[ii + 1 + this.perm[jj + 1 + this.perm[kk + 1]]];
 
-    let n0 = 0, n1 = 0, n2 = 0, n3 = 0;
+    let n0 = 0,
+      n1 = 0,
+      n2 = 0,
+      n3 = 0;
 
     let t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;
     if (t0 >= 0) {
@@ -171,7 +223,12 @@ class SimplexNoise {
 
 export const noise = new SimplexNoise(12345);
 
-export function curlNoise(x: number, y: number, z: number, scale: number = 0.005): { x: number; y: number } {
+export function curlNoise(
+  x: number,
+  y: number,
+  z: number,
+  scale: number = 0.005,
+): { x: number; y: number } {
   const eps = 0.0001;
 
   const n1 = noise.noise3D(x * scale, y * scale, z);

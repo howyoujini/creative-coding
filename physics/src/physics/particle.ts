@@ -11,14 +11,18 @@ export class Particle {
   maxLife: number;
   color: string;
 
-  constructor(x: number, y: number, options: Partial<{
-    vx: number;
-    vy: number;
-    mass: number;
-    radius: number;
-    life: number;
-    color: string;
-  }> = {}) {
+  constructor(
+    x: number,
+    y: number,
+    options: Partial<{
+      vx: number;
+      vy: number;
+      mass: number;
+      radius: number;
+      life: number;
+      color: string;
+    }> = {},
+  ) {
     this.pos = new Vector(x, y);
     this.vel = new Vector(options.vx || 0, options.vy || 0);
     this.acc = new Vector(0, 0);
@@ -103,12 +107,16 @@ export class VerletParticle {
   radius: number;
   color: string;
 
-  constructor(x: number, y: number, options: Partial<{
-    pinned: boolean;
-    mass: number;
-    radius: number;
-    color: string;
-  }> = {}) {
+  constructor(
+    x: number,
+    y: number,
+    options: Partial<{
+      pinned: boolean;
+      mass: number;
+      radius: number;
+      color: string;
+    }> = {},
+  ) {
     this.pos = new Vector(x, y);
     this.oldPos = new Vector(x, y);
     this.acc = new Vector(0, 0);
@@ -158,7 +166,7 @@ export class Constraint {
   solve(): void {
     const diff = Vector.sub(this.p2.pos, this.p1.pos);
     const dist = diff.mag();
-    const diffFactor = (this.length - dist) / dist * this.stiffness;
+    const diffFactor = ((this.length - dist) / dist) * this.stiffness;
     const offset = Vector.mult(diff, diffFactor * 0.5);
 
     if (!this.p1.pinned) {

@@ -61,7 +61,7 @@
       z-index: 1;
       max-width: 1100px;
       width: 100%;
-      pointer-events: auto;
+      pointer-events: none;
       overflow-y: auto;
       max-height: 100%;
       text-align: center;
@@ -321,7 +321,7 @@
       padding: 15px 25px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      animation: none !important;
+      animation: none;
     }
 
     .slider-group {
@@ -494,8 +494,8 @@
     }
 
     .small-text {
-      font-size: 0.9rem !important;
-      color: #666 !important;
+      font-size: 0.9rem;
+      color: #666;
     }
 
     /* Reference & Resource Styles */
@@ -535,11 +535,6 @@
 
     .ref-item:hover {
       background: rgba(248, 113, 113, 0.1);
-    }
-
-    .ref-icon {
-      font-size: 1.2rem;
-      flex-shrink: 0;
     }
 
     .ref-item .ref-title {
@@ -796,6 +791,37 @@
       letter-spacing: 0.1em;
       margin-bottom: 0.8rem;
     }
+
+    /* Extended Controls */
+    .controls-extended {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      max-width: 800px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 120px;
+    }
+
+    .control-group label {
+      font-size: 0.75rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .control-group .value-display {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #f87171;
+    }
+
   </style>
 </head>
 <body>
@@ -833,6 +859,7 @@
         <div class="section-header" style="text-align: center;">
           <span class="section-tag">Chapter 1</span>
           <p class="message">왜 <span class="keyword">랜덤</span>은 금방 지루해질까?</p>
+          <p style="font-size: 1rem; color: #666; margin-top: 0.5rem;">같이 한번 생각해봐요</p>
         </div>
         <div class="demo-container">
           <div class="demo-box">
@@ -853,6 +880,9 @@
               <li>예측 불가능 = 무의미한 혼돈</li>
               <li>인간의 뇌가 패턴을 찾지 못함</li>
             </ul>
+            <p style="font-size: 0.85rem; color: #555; margin-top: 0.8rem; padding: 0.5rem; background: rgba(255,255,255,0.02); border-radius: 4px;">
+              <strong>재밌는 사실:</strong> 인간의 뇌는 초당 약 60개의 "스냅샷"을 처리해요. 프레임마다 완전히 다른 위치면 뇌가 "이건 같은 물체다"라고 인식을 못 해요!
+            </p>
           </div>
           <div class="comparison-col">
             <h4>시간 누적의 효과</h4>
@@ -862,18 +892,27 @@
               <li>예측 가능하되 완전히 결정적이지 않음</li>
               <li>뇌가 '생명'으로 인식</li>
             </ul>
+            <p style="font-size: 0.85rem; color: #555; margin-top: 0.8rem; padding: 0.5rem; background: rgba(255,255,255,0.02); border-radius: 4px;">
+              <strong>전문 용어로:</strong> 이걸 <a href="https://en.wikipedia.org/wiki/Markov_chain" target="_blank" style="color: #f87171;">Markov Property</a>라고 해요. "현재 상태가 다음 상태를 결정한다"는 개념이에요.
+            </p>
           </div>
         </div>
         <div class="highlight-box" style="margin-top: 1.5rem;">
           <p>핵심 인사이트: 랜덤은 "상태"만 만든다. 생명감은 <span class="keyword">시간에 따른 변화 규칙</span>에서 나온다.</p>
         </div>
 
+        <div class="concept-card" style="max-width: 700px; margin: 1.5rem auto;">
+          <h4>함께 생각해보기: White Noise vs Brownian Motion</h4>
+          <p>왼쪽 데모는 <strong>White Noise</strong> - 모든 프레임이 독립적이에요. 오른쪽은 <strong>Brownian Motion(브라운 운동)</strong>의 원리를 따라요. 1827년 로버트 브라운이 꽃가루를 현미경으로 관찰하다가 발견한 움직임이에요. 물 분자가 꽃가루를 무작위로 밀어대지만, 꽃가루는 연속적인 궤적을 그려요. 자연의 "랜덤"도 사실은 누적된 랜덤이에요!</p>
+        </div>
+
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트</button>
           <div class="notes-content">
             <p><strong>발표 포인트:</strong> 많은 초보자들이 Math.random()만으로 자연스러운 움직임을 만들려고 합니다. 왼쪽 데모를 보세요 - 점들이 깜빡이듯 무작위로 움직입니다. 이건 "노이즈"지 "움직임"이 아닙니다.</p>
             <p>오른쪽을 보세요. 같은 랜덤 요소가 있지만, 시간에 따라 누적됩니다. position += velocity 같은 간단한 공식만으로도 이 차이가 납니다.</p>
             <p><strong>핵심 질문:</strong> "생명체는 어떻게 움직이나요?" - 이전 상태를 기억하고, 그것을 바탕으로 다음 상태를 결정합니다.</p>
+            <p><strong>심화:</strong> White Noise는 주파수 스펙트럼이 평탄해요. Brownian Motion(1/f² noise)은 저주파가 강해서 더 "부드럽게" 느껴져요. 이게 바로 Perlin Noise가 자연스러운 이유이기도 해요!</p>
           </div>
         </div>
       </div>
@@ -895,7 +934,7 @@
         </div>
 
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트</button>
           <div class="notes-content">
             <p><strong>핵심 메시지:</strong> Procedural Art에서 우리의 역할은 "무엇을 그릴까"가 아니라 "어떤 규칙을 적용할까"입니다.</p>
             <p>각 버튼을 클릭하면서 같은 점이 어떻게 다르게 움직이는지 보여주세요. 코드 한 줄의 차이가 전혀 다른 "성격"을 만듭니다.</p>
@@ -935,10 +974,11 @@
     </section>
 
     <!-- SLIDE 05: Particle -->
-    <section class="slide" data-slide="5">
+    <section class="slide has-controls" data-slide="5">
       <div class="slide-content">
         <div class="section-header" style="text-align: center;">
           <span class="section-tag">Chapter 2: 기초</span>
+          <p style="font-size: 0.9rem; color: #666; margin-top: 0.3rem;">여기가 모든 것의 시작점이에요!</p>
         </div>
         <div class="split-view">
           <div class="text-side">
@@ -947,10 +987,10 @@
 
             <div class="code-block">
               <span class="keyword">class</span> <span class="property">Particle</span> {<br>
-              &nbsp;&nbsp;<span class="property">position</span>: Vector&nbsp;&nbsp;<span class="comment">// 현재 위치</span><br>
-              &nbsp;&nbsp;<span class="property">velocity</span>: Vector&nbsp;&nbsp;<span class="comment">// 속도 (방향 + 크기)</span><br>
-              &nbsp;&nbsp;<span class="property">acceleration</span>: Vector&nbsp;&nbsp;<span class="comment">// 가속도</span><br>
-              &nbsp;&nbsp;<span class="property">mass</span>: <span class="number">number</span>&nbsp;&nbsp;<span class="comment">// 질량 (힘의 영향)</span><br>
+              &nbsp;&nbsp;<span class="property">position</span>: Vector&nbsp;&nbsp;<span class="comment">// 현재 위치 (x, y)</span><br>
+              &nbsp;&nbsp;<span class="property">velocity</span>: Vector&nbsp;&nbsp;<span class="comment">// 속도 = 방향 + 크기</span><br>
+              &nbsp;&nbsp;<span class="property">acceleration</span>: Vector&nbsp;&nbsp;<span class="comment">// 가속도 (힘의 결과)</span><br>
+              &nbsp;&nbsp;<span class="property">mass</span>: <span class="number">number</span>&nbsp;&nbsp;<span class="comment">// 질량 (관성의 척도)</span><br>
               }
             </div>
 
@@ -959,10 +999,15 @@
               <div class="formula-explain">매 프레임: 가속도→속도→위치 순으로 업데이트</div>
             </div>
 
+            <div class="concept-card" style="margin: 1rem 0; padding: 1rem;">
+              <h4>잠깐! 벡터(Vector)가 뭐예요?</h4>
+              <p style="font-size: 0.9rem;">벡터 = <strong>방향 + 크기</strong>를 동시에 표현하는 화살표예요. (3, 4)라는 벡터는 "오른쪽으로 3, 위로 4 이동"이라는 의미죠. 크기(magnitude)는 √(3²+4²) = 5예요. 피타고라스 정리가 여기서 쓰여요!</p>
+            </div>
+
             <ul class="bullet-list">
               <li>모든 파티클 시스템의 기본 구조</li>
               <li>1개든 10,000개든 동일한 물리 법칙</li>
-              <li>개별 행동 → 집단 패턴 (Emergence)</li>
+              <li>개별 행동 → 집단 패턴 (<a href="https://en.wikipedia.org/wiki/Emergence" target="_blank" style="color: #f87171;">Emergence</a>)</li>
             </ul>
           </div>
           <div class="demo-side">
@@ -972,17 +1017,65 @@
           </div>
         </div>
 
+        <div class="two-col" style="max-width: 900px; margin: 1rem auto;">
+          <div class="concept-card">
+            <h4>필수 벡터 연산 4가지</h4>
+            <div class="code-block" style="font-size: 0.8rem; margin: 0.5rem 0;">
+              <span class="comment">// 1. 덧셈: 힘 합치기</span><br>
+              v1 + v2 = (v1.x + v2.x, v1.y + v2.y)<br><br>
+              <span class="comment">// 2. 스칼라 곱: 크기 조절</span><br>
+              v × 2 = (v.x × 2, v.y × 2)<br><br>
+              <span class="comment">// 3. 정규화: 방향만 추출 (크기=1)</span><br>
+              normalize(v) = v / |v|<br><br>
+              <span class="comment">// 4. 크기(magnitude)</span><br>
+              |v| = √(v.x² + v.y²)
+            </div>
+          </div>
+          <div class="concept-card">
+            <h4>왜 acceleration을 매 프레임 초기화할까?</h4>
+            <p style="font-size: 0.85rem; line-height: 1.6;">힘(Force)은 <strong>순간적</strong>이에요. 손으로 공을 밀면 미는 그 순간만 힘이 작용하죠. 하지만 속도(velocity)는 <strong>누적</strong>돼요. 한번 밀린 공은 계속 굴러가요.</p>
+            <p style="font-size: 0.85rem; line-height: 1.6; margin-top: 0.5rem;">그래서 update() 끝에 <code style="color: #f87171;">acceleration.set(0, 0)</code>을 해줘요. 다음 프레임에 새로운 힘만 반영되도록요!</p>
+          </div>
+        </div>
+
         <div class="speaker-notes" style="margin-top: 1rem;">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트</button>
           <div class="notes-content">
             <p><strong>핵심 개념:</strong> Particle은 물리학의 "질점"과 같습니다. 크기는 무시하고 위치만 가진 점이지만, velocity와 acceleration이 추가되면서 "행동"이 생깁니다.</p>
             <p><strong>데모 설명:</strong> 화면의 공이 벽에 부딪히며 튕기는 것을 보세요. 위치(position), 속도(velocity), 힘(force/acceleration)이 표시됩니다. 흰색 선이 속도, 노란색 선이 현재 작용하는 힘입니다.</p>
             <p><strong>실무 팁:</strong> 처음에는 파티클 1개로 시작하세요. 1개가 제대로 움직이면 1000개도 똑같이 움직입니다.</p>
-            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+            <p><strong>심화 - 왜 미분/적분인가:</strong> 물리에서 position의 시간 미분이 velocity, velocity의 시간 미분이 acceleration이에요. 우리가 하는 건 그 역방향(적분)이에요. acceleration → velocity → position 순으로 "쌓아가는" 거죠!</p>
+            <p style="margin-top: 1rem;"><strong>참고:</strong>
               <a href="https://natureofcode.com/vectors/" target="_blank">Nature of Code: Vectors</a> ·
-              <a href="https://www.youtube.com/watch?v=mQ-X-D5XIZ8" target="_blank">Coding Train: What is a Vector?</a>
             </p>
           </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="control-group">
+          <label>Mass</label>
+          <input type="range" id="particle-mass" min="0.5" max="5" step="0.1" value="1">
+          <span id="particle-mass-value" class="value-display">1.0</span>
+        </div>
+        <div class="control-group">
+          <label>Gravity</label>
+          <input type="range" id="particle-gravity" min="0" max="0.5" step="0.01" value="0.1">
+          <span id="particle-gravity-value" class="value-display">0.10</span>
+        </div>
+        <div class="control-group">
+          <label>Friction</label>
+          <input type="range" id="particle-friction" min="0.9" max="1" step="0.005" value="0.99">
+          <span id="particle-friction-value" class="value-display">0.990</span>
+        </div>
+        <div class="control-group">
+          <label>Bounce</label>
+          <input type="range" id="particle-bounce" min="0" max="1" step="0.05" value="0.8">
+          <span id="particle-bounce-value" class="value-display">0.80</span>
+        </div>
+        <div class="control-group">
+          <label>Wind</label>
+          <input type="range" id="particle-wind" min="0" max="0.5" step="0.01" value="0.15">
+          <span id="particle-wind-value" class="value-display">0.15</span>
         </div>
       </div>
     </section>
@@ -992,40 +1085,63 @@
       <canvas id="canvas-06"></canvas>
       <div class="slide-content" style="text-align: center;">
         <h2>Force: <span class="keyword">방향</span>을 가진 의도</h2>
-        <p style="margin: 1rem auto; max-width: 700px;">Force는 숫자가 아니라 벡터다. 방향과 크기를 가진 의도의 표현.</p>
+        <p style="margin: 0.5rem auto; max-width: 700px;">Force는 숫자가 아니라 벡터다. 방향과 크기를 가진 의도의 표현.</p>
+        <p style="margin: 0.5rem auto; font-size: 0.95rem; color: #666;">버튼을 조합해서 실험해봐요! 물리학이 장난감처럼 느껴질 거예요</p>
 
-        <div class="three-col" style="max-width: 900px; margin: 1.5rem auto;">
+        <div class="three-col" style="max-width: 900px; margin: 1rem auto;">
           <div class="info-card">
-            <h4>🌍 Gravity (중력)</h4>
-            <p>항상 아래로 작용하는 일정한 힘.<br><code>F = (0, 0.1)</code></p>
+            <h4>Gravity (중력)</h4>
+            <p>항상 아래로 작용하는 일정한 힘.<br><code style="color: #f87171;">F = (0, 0.1)</code></p>
+            <p style="font-size: 0.75rem; color: #555; margin-top: 0.5rem;">실제 중력: 9.8m/s². 게임에선 "느낌"으로 조절!</p>
           </div>
           <div class="info-card">
-            <h4>🧲 Attract (끌어당김)</h4>
-            <p>목표 지점을 향해 작용.<br><code>F = normalize(target - pos) × strength</code></p>
+            <h4>Attract (끌어당김)</h4>
+            <p>목표 지점을 향해 작용.<br><code style="color: #f87171;">F = normalize(target - pos) × strength</code></p>
+            <p style="font-size: 0.75rem; color: #555; margin-top: 0.5rem;">거리 제곱에 반비례하면 "진짜" 중력!</p>
           </div>
           <div class="info-card">
-            <h4>🌊 Noise Force</h4>
-            <p>위치 기반 의사 랜덤 방향.<br><code>F = fromAngle(noise(x, y) × 2π)</code></p>
+            <h4>Noise Force</h4>
+            <p>위치 기반 의사 랜덤 방향.<br><code style="color: #f87171;">F = fromAngle(noise(x, y) × 2π)</code></p>
+            <p style="font-size: 0.75rem; color: #555; margin-top: 0.5rem;">새떼, 물고기떼 시뮬레이션의 기초!</p>
           </div>
         </div>
 
-        <div class="math-block" style="max-width: 700px; margin: 1.5rem auto;">
+        <div class="math-block" style="max-width: 700px; margin: 1rem auto;">
           <div class="formula-main">F = m × a &nbsp;→&nbsp; a = F / m</div>
-          <div class="formula-explain"><a href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion#Second_law" target="_blank" style="color: #f87171;">뉴턴의 제2법칙</a>: 질량이 클수록 같은 힘에 덜 반응</div>
+          <div class="formula-explain"><a href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion#Second_law" target="_blank" style="color: #f87171;">뉴턴의 제2법칙</a>: 질량이 클수록 같은 힘에 덜 반응 (관성!)</div>
+        </div>
+
+        <div class="two-col" style="max-width: 850px; margin: 1rem auto;">
+          <div class="concept-card" style="padding: 0.8rem;">
+            <h4>Force Accumulation이란?</h4>
+            <p style="font-size: 0.85rem; line-height: 1.5;">
+              매 프레임 여러 힘이 동시에 작용해요:<br>
+              <code style="color: #f87171;">F_total = F_gravity + F_wind + F_attract</code><br>
+              이 합쳐진 벡터 하나가 최종 가속도를 결정!
+            </p>
+          </div>
+          <div class="concept-card" style="padding: 0.8rem;">
+            <h4>자주 쓰는 힘들</h4>
+            <p style="font-size: 0.85rem; line-height: 1.5;">
+              • <strong>Friction</strong>: F = -v × c (속도 반대 방향)<br>
+              • <strong>Drag</strong>: F = -v × |v| × c (속도²에 비례)<br>
+              • <strong>Repel</strong>: Attract의 반대 (밀어냄)
+            </p>
+          </div>
         </div>
 
         <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
-          <p>핵심: 여러 힘이 동시에 작용할 때, 결과는 <span class="keyword">벡터의 합</span>이다.<br>
-          F_total = F_gravity + F_attract + F_noise + ...</p>
+          <p><strong>실험해보기:</strong> Gravity + Attract를 동시에 켜면? 떨어지면서 마우스 쪽으로 휘어져요. 이게 <span class="keyword">중첩의 원리(Superposition)</span>!</p>
         </div>
 
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트</button>
           <div class="notes-content">
             <p><strong>인터랙션 가이드:</strong> 마우스를 움직여보세요. 파티클들이 마우스를 향해 끌려옵니다. 버튼을 조합해서 여러 힘을 동시에 적용할 수 있습니다.</p>
             <p><strong>실험:</strong> Gravity + Attract를 동시에 켜면 어떻게 될까요? 중력으로 떨어지면서도 마우스를 향해 휘어집니다. 이것이 벡터 합의 힘입니다.</p>
             <p><strong>크리에이티브 팁:</strong> Noise Force만 켜면 유기적인 군집 행동이 나타납니다. 새떼, 물고기떼 시뮬레이션의 기초입니다.</p>
-            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+            <p><strong>심화 - 만유인력:</strong> F = G × m1 × m2 / r². 거리의 제곱에 반비례하는 진짜 중력! 행성 궤도 시뮬레이션에 사용해요.</p>
+            <p style="margin-top: 1rem;"><strong>참고:</strong>
               <a href="https://natureofcode.com/forces/" target="_blank">Nature of Code: Forces</a> ·
               <a href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion" target="_blank">Newton's Laws (Wikipedia)</a> ·
               <a href="https://www.youtube.com/watch?v=WBdhAuWS6X8" target="_blank">Coding Train: Gravitational Attraction</a>
@@ -1033,10 +1149,23 @@
           </div>
         </div>
       </div>
-      <div class="controls">
-        <button class="toggle-btn" data-force="gravity">Gravity</button>
-        <button class="toggle-btn active" data-force="attract">Mouse Attract</button>
-        <button class="toggle-btn" data-force="noise">Noise Force</button>
+      <div class="controls" style="flex-wrap: wrap; max-width: 900px;">
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+          <button class="toggle-btn" data-force="gravity">Gravity</button>
+          <button class="toggle-btn active" data-force="attract">Attract</button>
+          <button class="toggle-btn" data-force="repel">Repel</button>
+          <button class="toggle-btn" data-force="noise">Noise</button>
+        </div>
+        <div class="control-group">
+          <label>Damping</label>
+          <input type="range" id="force-damping" min="0.9" max="1" step="0.005" value="0.98">
+          <span id="force-damping-value" class="value-display">0.980</span>
+        </div>
+        <div class="control-group">
+          <label>Particles</label>
+          <input type="range" id="force-particle-count" min="50" max="500" step="10" value="100">
+          <span id="force-particle-count-value" class="value-display">100</span>
+        </div>
       </div>
     </section>
 
@@ -1044,7 +1173,8 @@
     <section class="slide" data-slide="7">
       <div class="slide-content">
         <h2 style="text-align: center; margin-bottom: 0.5rem;">Integration: <span class="keyword">시간</span>을 어떻게 계산할 것인가</h2>
-        <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem; color: #888;">같은 힘이라도 적분 방법에 따라 완전히 다른 움직임</p>
+        <p style="text-align: center; margin-bottom: 1rem; font-size: 1.1rem; color: #888;">같은 힘이라도 적분 방법에 따라 완전히 다른 움직임</p>
+        <p style="text-align: center; margin-bottom: 1.5rem; font-size: 0.95rem; color: #666;">조금 수학적인 얘기지만, 같이 알아보면 재밌어요!</p>
 
         <div class="demo-container">
           <div class="demo-box" style="width: 450px; height: 320px;">
@@ -1061,43 +1191,65 @@
           <div class="comparison-col">
             <h4>Euler Integration (오일러)</h4>
             <div class="code-block" style="font-size: 0.85rem;">
-              velocity += acceleration<br>
-              position += velocity
+              velocity += acceleration × dt<br>
+              position += velocity × dt
             </div>
             <ul>
-              <li>✅ 구현이 단순함</li>
-              <li>⚠️ 높은 속도에서 불안정</li>
-              <li>❌ 에너지가 누적되어 폭발 가능</li>
+              <li>구현이 단순함 (1707년 레온하르트 오일러)</li>
+              <li>높은 속도에서 불안정</li>
+              <li>에너지가 누적되어 폭발 가능</li>
             </ul>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem; padding: 0.4rem; background: rgba(255,100,100,0.05); border-radius: 4px;">
+              <strong>왜 폭발?</strong> 매 스텝마다 약간의 오차가 생기는데, 그 오차가 다음 스텝의 입력이 돼서 점점 커져요. 이걸 "에너지 드리프트"라고 해요.
+            </p>
           </div>
           <div class="comparison-col">
             <h4>Verlet Integration (베를레)</h4>
             <div class="code-block" style="font-size: 0.85rem;">
-              velocity = position - oldPosition<br>
-              oldPosition = position<br>
-              position += velocity + acceleration
+              <span class="comment">// 속도를 저장하지 않아요!</span><br>
+              temp = position<br>
+              position = 2×position - oldPos + a×dt²<br>
+              oldPosition = temp
             </div>
             <ul>
-              <li>✅ 이전 위치를 "기억"</li>
-              <li>✅ 높은 안정성</li>
-              <li>✅ Constraint 처리에 최적</li>
+              <li>이전 위치를 "기억" (1791년 베를레)</li>
+              <li>시간 역행 대칭성 (time-reversible)</li>
+              <li>Constraint 처리에 최적</li>
             </ul>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem; padding: 0.4rem; background: rgba(100,255,100,0.05); border-radius: 4px;">
+              <strong>왜 안정?</strong> 속도를 "암묵적"으로 계산해서 오차가 누적되지 않아요. 제약조건 풀 때 위치만 건드리면 속도도 자동 반영!
+            </p>
           </div>
         </div>
 
+        <div class="concept-card" style="max-width: 800px; margin: 1rem auto;">
+          <h4>함께 이해하기: 왜 "적분(Integration)"이라고 부를까?</h4>
+          <p style="font-size: 0.9rem; line-height: 1.7;">
+            물리학에서 <strong>가속도 a = dv/dt</strong> (속도의 시간 미분)이에요. 반대로 <strong>v = ∫a dt</strong> (가속도의 적분)가 되죠.<br>
+            컴퓨터는 연속적인 적분을 못 하니까 <strong>v ≈ v + a×Δt</strong>로 근사해요. 이게 바로 "수치 적분(Numerical Integration)"!<br>
+            <span style="color: #f87171;">Δt가 작을수록 정확하지만</span>, 계산량은 늘어나요. 게임은 보통 1/60초(16.67ms)를 써요.
+          </p>
+        </div>
+
+        <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
+          <p><strong>실무 팁:</strong> 대부분의 크리에이티브 코딩에선 Euler로 충분해요. 하지만 <span class="keyword">천(cloth)</span>이나 <span class="keyword">로프(rope)</span>를 만들려면 Verlet이 거의 필수예요!</p>
+        </div>
+
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 상세 설명</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트 + 상세 설명</button>
           <div class="notes-content">
             <p><strong>왜 중요한가:</strong> Integration은 "미분의 역연산"입니다. 가속도(a)를 적분하면 속도(v), 속도를 적분하면 위치(p)가 됩니다. 하지만 컴퓨터는 연속적인 적분을 할 수 없어서 이산적으로 근사합니다.</p>
             <p><strong>Euler의 문제:</strong> 마우스를 빠르게 움직여보세요. Euler(왼쪽)는 공이 불안정하게 진동하거나 튕겨나갈 수 있습니다. 이를 "numerical instability"라고 합니다.</p>
             <p><strong>Verlet의 강점:</strong> 속도를 직접 저장하지 않고 "현재 위치 - 이전 위치"로 암묵적으로 계산합니다. 이 방식이 constraint(거리 제약) 처리에 매우 좋습니다.</p>
+            <p><strong>더 알고 싶다면:</strong> RK4(Runge-Kutta 4차)도 있어요. 더 정확하지만 4배 느려요. 과학 시뮬레이션에서 주로 써요.</p>
             <p><strong>실무 선택 가이드:</strong><br>
             - 간단한 파티클 효과 → Euler로 충분<br>
             - 천, 로프, 체인 시뮬레이션 → Verlet 필수<br>
             - 게임 물리 엔진 → 대부분 Verlet 변형 사용</p>
-            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+            <p style="margin-top: 1rem;"><strong>참고:</strong>
               <a href="https://en.wikipedia.org/wiki/Verlet_integration" target="_blank">Verlet Integration (Wikipedia)</a> ·
-              <a href="https://www.youtube.com/watch?v=3HjO_RGIjCU" target="_blank">Coding Train: Verlet Physics</a>
+              <a href="https://www.youtube.com/watch?v=3HjO_RGIjCU" target="_blank">Coding Train: Verlet Physics</a> ·
+              <a href="https://gafferongames.com/post/integration_basics/" target="_blank">Gaffer on Games: Integration Basics</a>
             </p>
           </div>
         </div>
@@ -1109,14 +1261,15 @@
       <canvas id="canvas-08"></canvas>
       <div class="slide-content" style="text-align: center;">
         <h2>Spring: 가장 많이 쓰이는 <span class="keyword">마법</span></h2>
-        <p style="margin: 1rem auto; max-width: 600px; font-size: 1.2rem;">탄성(Elasticity)은 감정을 만든다</p>
+        <p style="margin: 0.5rem auto; max-width: 600px; font-size: 1.2rem;">탄성(Elasticity)은 감정을 만든다</p>
+        <p style="margin: 0.5rem auto; font-size: 0.95rem; color: #666;">UI 애니메이션의 80%는 이 원리로 만들어져요!</p>
 
-        <div class="math-block" style="max-width: 500px; margin: 1.5rem auto;">
-          <div class="formula-main">F = -k × (position - target)</div>
-          <div class="formula-explain"><a href="https://en.wikipedia.org/wiki/Hooke%27s_law" target="_blank" style="color: #f87171;">Hooke의 법칙</a>: 목표와의 거리에 비례하는 복원력</div>
+        <div class="math-block" style="max-width: 550px; margin: 1rem auto;">
+          <div class="formula-main">F = -k × (position - target) - c × velocity</div>
+          <div class="formula-explain"><a href="https://en.wikipedia.org/wiki/Hooke%27s_law" target="_blank" style="color: #f87171;">Hooke의 법칙</a> + <a href="https://en.wikipedia.org/wiki/Damping" target="_blank" style="color: #f87171;">Damping</a>: 복원력 + 감쇠력</div>
         </div>
 
-        <div class="comparison-table" style="max-width: 800px; margin: 1rem auto;">
+        <div class="comparison-table" style="max-width: 850px; margin: 1rem auto;">
           <div class="comparison-col">
             <h4>Stiffness (강성) k</h4>
             <ul>
@@ -1125,35 +1278,54 @@
               <li>UI 버튼 호버: 0.1 ~ 0.15</li>
               <li>카메라 팔로우: 0.02 ~ 0.05</li>
             </ul>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem; padding: 0.4rem; background: rgba(255,255,255,0.02); border-radius: 4px;">
+              기타 줄을 생각해봐요. 팽팽할수록(k↑) 더 빠르게 진동하죠!
+            </p>
           </div>
           <div class="comparison-col">
-            <h4>Damping (감쇠)</h4>
+            <h4>Damping (감쇠) c</h4>
             <ul>
-              <li>높음(0.99) → 오래 흔들림 (탱탱볼)</li>
-              <li>낮음(0.85) → 빠르게 정지 (젤리)</li>
-              <li>공식: velocity *= damping</li>
-              <li>1.0 = 영원히 진동, 0.0 = 즉시 정지</li>
+              <li>낮음(0.85) → 오래 흔들림 (탱탱볼)</li>
+              <li>높음(0.99) → 빠르게 정지 (젤리)</li>
+              <li>공식: velocity *= (1 - damping)</li>
+              <li>0 = 영원히 진동, 1 = 즉시 정지</li>
             </ul>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem; padding: 0.4rem; background: rgba(255,255,255,0.02); border-radius: 4px;">
+              자동차 서스펜션과 같아요. 충격을 흡수하죠!
+            </p>
           </div>
+        </div>
+
+        <div class="concept-card" style="max-width: 800px; margin: 1rem auto;">
+          <h4>함께 알아보기: 임계 감쇠(Critical Damping)란?</h4>
+          <p style="font-size: 0.88rem; line-height: 1.7;">
+            스프링 시스템에는 <strong>세 가지 상태</strong>가 있어요:<br>
+            • <strong style="color: #f87171;">Underdamped</strong> (감쇠 부족): 목표를 지나쳐서 왔다갔다 진동해요 → 탱탱볼, 젤리<br>
+            • <strong style="color: #4ade80;">Critically Damped</strong> (임계 감쇠): 진동 없이 가장 빠르게 도달해요 → 문 닫히는 속도<br>
+            • <strong style="color: #60a5fa;">Overdamped</strong> (과감쇠): 느리지만 진동 없이 도달해요 → 점성이 높은 액체<br>
+            <span style="color: #888; font-size: 0.85rem;">임계 감쇠 조건: c = 2√(k×m). UI에선 보통 살짝 underdamped가 더 "살아있는" 느낌!</span>
+          </p>
         </div>
 
         <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
-          <p><strong>활용 예시:</strong> UI 애니메이션, 카메라 따라가기, 커서 효과, 물리적 연결, 탄성 버튼, 스크롤 바운스</p>
+          <p><strong>어디서 많이 봤을까?</strong> iOS 스크롤 바운스, MacOS 창 최소화, 안드로이드 오버스크롤, 웹의 Framer Motion/react-spring 전부 Spring 기반이에요!</p>
         </div>
 
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 실무 팁</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트 + 실무 팁</button>
           <div class="notes-content">
             <p><strong>왜 Spring이 "마법"인가:</strong> 가장 적은 코드로 가장 자연스러운 움직임을 만듭니다. lerp(선형 보간)보다 훨씬 생동감 있습니다.</p>
+            <p><strong>lerp vs Spring:</strong> lerp는 "남은 거리의 일정 비율만큼 이동"이에요. Spring은 "목표와의 거리에 비례하는 힘 + 속도에 비례하는 저항"이에요. Spring은 overshoot(지나침)이 가능해서 더 역동적이죠!</p>
             <p><strong>슬라이더 실험:</strong> Stiffness를 최대로 → 딱딱한 느낌. 최소로 → 나른한 느낌. Damping을 최소로 → 계속 흔들림. 최대로 → 한번에 멈춤.</p>
             <p><strong>실무 꿀팁:</strong><br>
             - iOS의 탄성 스크롤 = Spring + 낮은 damping<br>
             - 마우스 커서 따라가기 = Spring + 중간 stiffness<br>
             - 알림 팝업 등장 = Spring + 높은 stiffness, 낮은 damping (bounce 효과)</p>
             <p><strong>주의:</strong> stiffness가 너무 높고 damping이 너무 높으면 진동이 발산할 수 있습니다. 실제로는 0.1 이하의 stiffness가 안전합니다.</p>
-            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+            <p style="margin-top: 1rem;"><strong>참고:</strong>
               <a href="https://www.joshwcomeau.com/animation/a-friendly-introduction-to-spring-physics/" target="_blank">A Friendly Intro to Spring Physics</a> ·
-              <a href="https://www.react-spring.dev/" target="_blank">react-spring 라이브러리</a>
+              <a href="https://www.react-spring.dev/" target="_blank">react-spring 라이브러리</a> ·
+              <a href="https://www.framer.com/motion/" target="_blank">Framer Motion</a>
             </p>
           </div>
         </div>
@@ -1170,28 +1342,32 @@
       </div>
     </section>
 
-    <!-- SLIDE 09: Constraint -->
+    <!-- SLIDE 09: Constraint (Advanced) -->
     <section class="slide has-controls" data-slide="9">
       <canvas id="canvas-09"></canvas>
       <div class="slide-content" style="text-align: center;">
         <div class="section-header">
-          <span class="section-tag">Chapter 3: 구조</span>
+          <span class="section-tag">Chapter 3: 구조 - Advanced</span>
           <h2>Constraint: 형태는 <span class="keyword">유지</span>되는 것이다</h2>
+          <p style="font-size: 0.95rem; color: #666; margin-top: 0.3rem;">천, 로프, 젤리의 비밀을 같이 파헤쳐봐요!</p>
         </div>
         <p style="margin: 1rem auto; max-width: 700px;">형태를 "그리는" 게 아니라, 물리적 제약을 통해 "유지"한다</p>
 
         <div class="three-col" style="max-width: 900px; margin: 1.5rem auto;">
           <div class="info-card">
-            <h4>📏 Distance Constraint</h4>
+            <h4>Distance Constraint</h4>
             <p>두 점 사이 거리 유지<br>→ 체인, 로프, 천 구조</p>
+            <p style="font-size: 0.75rem; color: #555; margin-top: 0.5rem;">가장 기본이자 가장 강력!</p>
           </div>
           <div class="info-card">
-            <h4>📍 <a href="https://matthias-research.github.io/pages/publications/posBasedDyn.pdf" target="_blank" style="color: #f87171; text-decoration: none;">Position Based Dynamics</a></h4>
+            <h4><a href="https://matthias-research.github.io/pages/publications/posBasedDyn.pdf" target="_blank" style="color: #f87171; text-decoration: none;">Position Based Dynamics</a></h4>
             <p>위치를 직접 조정<br>→ 속도 기반보다 안정적</p>
+            <p style="font-size: 0.75rem; color: #555; margin-top: 0.5rem;">2006년 Müller 논문이 시초</p>
           </div>
           <div class="info-card">
-            <h4>🔄 Iterative Solving</h4>
+            <h4>Iterative Solving</h4>
             <p>여러 번 반복 계산<br>→ 3~5회로 충분히 안정</p>
+            <p style="font-size: 0.75rem; color: #555; margin-top: 0.5rem;">Gauss-Seidel 방식!</p>
           </div>
         </div>
 
@@ -1204,27 +1380,77 @@
           p2.pos += diff × correction
         </div>
 
+        <div class="two-col" style="max-width: 900px; margin: 1rem auto;">
+          <div class="concept-card">
+            <h4>왜 "위치 기반(Position Based)"이 좋을까?</h4>
+            <p style="font-size: 0.85rem; line-height: 1.6;">
+              기존 방식: 힘 → 가속도 → 속도 → 위치 (간접적)<br>
+              PBD 방식: <strong>위치를 직접 "당겨서" 제약 만족</strong><br><br>
+              장점: Verlet과 궁합이 완벽! 위치만 바꿔도 속도가 자동으로 반영돼요. 폭발(발산)도 거의 없어요!
+            </p>
+          </div>
+          <div class="concept-card">
+            <h4>왜 반복(Iteration)이 필요할까?</h4>
+            <p style="font-size: 0.85rem; line-height: 1.6;">
+              제약조건 A를 풀면 → 제약조건 B가 깨지고<br>
+              제약조건 B를 풀면 → 제약조건 C가 깨지고...<br><br>
+              <strong>반복하면 점점 균형점에 수렴!</strong> 이게 <a href="https://en.wikipedia.org/wiki/Gauss%E2%80%93Seidel_method" target="_blank" style="color: #f87171;">Gauss-Seidel 반복법</a>이에요.
+            </p>
+          </div>
+        </div>
+
+        <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
+          <p><strong>재밌는 사실:</strong> Unity, Unreal, Blender의 천/헤어 시뮬레이션 모두 PBD 기반이에요. 게임 업계 표준이 된 2006년 논문 하나의 위력!</p>
+        </div>
+
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 활용 사례</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트 + 활용 사례</button>
           <div class="notes-content">
             <p><strong>데모 설명:</strong> Constraint ON 상태에서 천이 자연스럽게 늘어집니다. OFF로 끄면? 모든 점이 독립적으로 떨어져서 형태가 무너집니다.</p>
             <p><strong>핵심 원리:</strong> "두 점 사이 거리가 원래 길이와 다르면, 두 점을 각각 절반씩 이동시켜 원래 길이로 복원한다." 이 단순한 규칙을 모든 연결에 반복 적용합니다.</p>
             <p><strong>왜 반복(iteration)이 필요한가:</strong> 한 constraint를 풀면 다른 constraint가 깨집니다. 여러 번 반복하면 전체가 균형점에 수렴합니다. 보통 3~5회면 충분합니다.</p>
+            <p><strong>Stiffness 조절:</strong> correction에 0~1 사이 계수를 곱하면 "유연한" 제약이 돼요. 1.0이면 완전 강체, 0.5면 고무줄처럼!</p>
             <p><strong>활용 사례:</strong><br>
             - 천(Cloth) 시뮬레이션: 격자형 constraint 네트워크<br>
             - 로프/체인: 일렬로 연결된 constraint<br>
             - 소프트바디: 삼각형 메시 + constraint<br>
             - 래그돌 물리: 관절 = constraint</p>
-            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+            <p style="margin-top: 1rem;"><strong>참고:</strong>
               <a href="https://www.youtube.com/watch?v=pBMivz4rIJY" target="_blank">Coding Train: Soft Body Physics</a> ·
-              <a href="https://gamedevelopment.tutsplus.com/tutorials/simulate-tearable-cloth-and-ragdolls-with-simple-verlet-integration--gamedev-519" target="_blank">Tearable Cloth Tutorial</a>
+              <a href="https://gamedevelopment.tutsplus.com/tutorials/simulate-tearable-cloth-and-ragdolls-with-simple-verlet-integration--gamedev-519" target="_blank">Tearable Cloth Tutorial</a> ·
+              <a href="https://matthias-research.github.io/pages/publications/posBasedDyn.pdf" target="_blank">PBD 원논문 (Müller 2006)</a>
             </p>
           </div>
         </div>
       </div>
-      <div class="controls">
+      <div class="controls" style="flex-wrap: wrap; max-width: 900px;">
         <button class="toggle-btn active" data-constraint="on">Constraint ON</button>
         <button class="toggle-btn" data-constraint="off">Constraint OFF</button>
+        <div class="control-group">
+          <label>Stiffness</label>
+          <input type="range" id="constraint-stiffness" min="0.1" max="1" step="0.05" value="1">
+          <span id="constraint-stiffness-value" class="value-display">1.00</span>
+        </div>
+        <div class="control-group">
+          <label>Iterations</label>
+          <input type="range" id="constraint-iterations" min="1" max="10" step="1" value="3">
+          <span id="constraint-iterations-value" class="value-display">3</span>
+        </div>
+        <div class="control-group">
+          <label>Gravity</label>
+          <input type="range" id="constraint-gravity" min="0" max="0.8" step="0.05" value="0.3">
+          <span id="constraint-gravity-value" class="value-display">0.30</span>
+        </div>
+        <div class="control-group">
+          <label>Cols</label>
+          <input type="range" id="constraint-cols" min="5" max="20" step="1" value="12">
+          <span id="constraint-cols-value" class="value-display">12</span>
+        </div>
+        <div class="control-group">
+          <label>Rows</label>
+          <input type="range" id="constraint-rows" min="3" max="15" step="1" value="8">
+          <span id="constraint-rows-value" class="value-display">8</span>
+        </div>
       </div>
     </section>
 
@@ -1264,17 +1490,18 @@
       </div>
     </section>
 
-    <!-- SLIDE 11: Flow Field -->
+    <!-- SLIDE 11: Flow Field (Advanced) -->
     <section class="slide has-controls" data-slide="11">
       <canvas id="canvas-11"></canvas>
       <div class="slide-content" style="text-align: center;">
         <div class="section-header">
-          <span class="section-tag">Chapter 4: 공간</span>
+          <span class="section-tag">Chapter 4: 공간 - Advanced</span>
           <h2>Flow Field: <span class="keyword">보이지 않는 바람</span></h2>
+          <p style="font-size: 0.95rem; color: #666; margin-top: 0.3rem;">Tyler Hobbs, Zach Lieberman 등 유명 아티스트들의 비밀 무기!</p>
         </div>
-        <p style="margin: 1rem auto; max-width: 700px;">공간의 각 지점에 방향(벡터)을 할당. 파티클은 자신의 위치에서 방향을 읽고 따른다.</p>
+        <p style="margin: 0.5rem auto; max-width: 700px;">공간의 각 지점에 방향(벡터)을 할당. 파티클은 자신의 위치에서 방향을 읽고 따른다.</p>
 
-        <div class="comparison-table" style="max-width: 800px; margin: 1.5rem auto;">
+        <div class="comparison-table" style="max-width: 850px; margin: 1rem auto;">
           <div class="comparison-col">
             <h4>1. 필드 구조 정의</h4>
             <div class="code-block" style="font-size: 0.85rem; text-align: left;">
@@ -1283,6 +1510,9 @@
               rows = height / resolution<br>
               field[x][y] = noise(x, y) × 2π&nbsp;&nbsp;<span class="comment">// 각도</span>
             </div>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem;">
+              resolution = 20~30px이 보통 적당해요
+            </p>
           </div>
           <div class="comparison-col">
             <h4>2. 파티클에 적용</h4>
@@ -1292,15 +1522,27 @@
               gridY = floor(pos.y / resolution)<br>
               force = fromAngle(field[gridX][gridY])
             </div>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem;">
+              현재 위치의 "바람 방향"을 읽는 거예요!
+            </p>
           </div>
         </div>
 
-        <div class="highlight-box" style="max-width: 600px; margin: 1rem auto;">
-          <p>핵심: 파티클은 판단하지 않는다. <span class="keyword">"여기선 이 방향"</span>이라는 공간의 규칙을 따를 뿐.</p>
+        <div class="concept-card" style="max-width: 800px; margin: 1rem auto;">
+          <h4>함께 생각해보기: 왜 Perlin Noise를 쓸까?</h4>
+          <p style="font-size: 0.88rem; line-height: 1.7;">
+            <strong>Math.random()</strong>을 쓰면? 인접한 셀의 방향이 완전 무관해서 파티클이 갈팡질팡해요.<br>
+            <strong>Perlin Noise</strong>는 <a href="https://en.wikipedia.org/wiki/Perlin_noise" target="_blank" style="color: #f87171;">Ken Perlin이 1983년에 개발</a>. 영화 &lt;트론&gt;을 위해 만들었어요!<br>
+            특징: <span style="color: #f87171;">공간적 연속성</span> - 가까운 위치는 비슷한 값을 가져서 부드러운 흐름이 만들어져요.
+          </p>
+        </div>
+
+        <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
+          <p><strong>변형 아이디어:</strong> noise(x, y, <span class="keyword">time</span>)으로 3D 노이즈를 쓰면 시간에 따라 필드가 변해요. 살아 숨쉬는 바람!</p>
         </div>
 
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 구현 가이드</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트 + 구현 가이드</button>
           <div class="notes-content">
             <p><strong>데모 설명:</strong> "Show Vectors"를 켜면 각 셀의 방향이 화살표로 보입니다. 파티클은 자신이 위치한 셀의 화살표 방향으로 힘을 받습니다.</p>
             <p><strong>해상도(resolution) 선택:</strong><br>
@@ -1313,7 +1555,8 @@
             - 수학 함수: sin, cos 조합으로 특정 패턴 생성<br>
             - 이미지 기반: 이미지의 밝기/색상을 각도로 변환</p>
             <p><strong>시간 변화:</strong> noise(x, y, <strong>time</strong>)을 사용하면 필드가 시간에 따라 변합니다. 살아있는 바람처럼!</p>
-            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+            <p><strong>프로 팁:</strong> noise 값에 scale 계수를 곱하면 소용돌이 크기가 달라져요. noise(x × 0.01, y × 0.01)은 큰 소용돌이, noise(x × 0.1, y × 0.1)은 작은 소용돌이!</p>
+            <p style="margin-top: 1rem;"><strong>참고:</strong>
               <a href="https://www.youtube.com/watch?v=BjoM9oKOAKY" target="_blank">Coding Train: Flow Fields</a> ·
               <a href="https://tylerxhobbs.com/essays/2020/flow-fields" target="_blank">Tyler Hobbs: Flow Fields</a> ·
               <a href="https://en.wikipedia.org/wiki/Perlin_noise" target="_blank">Perlin Noise (Wikipedia)</a>
@@ -1321,64 +1564,112 @@
           </div>
         </div>
       </div>
-      <div class="controls">
+      <div class="controls" style="flex-wrap: wrap; max-width: 1000px;">
         <button class="toggle-btn active" data-show="vectors">Show Vectors</button>
         <button class="toggle-btn" data-show="particles">Particles Only</button>
+        <div class="control-group">
+          <label>Resolution</label>
+          <input type="range" id="flow-resolution" min="10" max="50" step="5" value="25">
+          <span id="flow-resolution-value" class="value-display">25</span>
+        </div>
+        <div class="control-group">
+          <label>Noise Scale</label>
+          <input type="range" id="flow-noise-scale" min="0.02" max="0.3" step="0.01" value="0.1">
+          <span id="flow-noise-scale-value" class="value-display">0.10</span>
+        </div>
+        <div class="control-group">
+          <label>Speed</label>
+          <input type="range" id="flow-noise-speed" min="0.1" max="1" step="0.05" value="0.3">
+          <span id="flow-noise-speed-value" class="value-display">0.30</span>
+        </div>
+        <div class="control-group">
+          <label>Force</label>
+          <input type="range" id="flow-force-strength" min="0.05" max="0.5" step="0.01" value="0.2">
+          <span id="flow-force-strength-value" class="value-display">0.20</span>
+        </div>
+        <div class="control-group">
+          <label>Trail</label>
+          <input type="range" id="flow-trail-opacity" min="0.02" max="0.3" step="0.01" value="0.1">
+          <span id="flow-trail-opacity-value" class="value-display">0.10</span>
+        </div>
       </div>
     </section>
 
-    <!-- SLIDE 12: Curl Noise -->
+    <!-- SLIDE 12: Curl Noise (Advanced) -->
     <section class="slide has-controls" data-slide="12">
       <canvas id="canvas-12"></canvas>
       <div class="slide-content" style="text-align: center;">
         <h2>Curl Noise = <span class="keyword">Organic Motion</span></h2>
-        <p style="margin: 1rem auto; max-width: 700px; font-size: 1.1rem;">회전(rotation)이 들어가면 생명이 생긴다. 연기, 물, 불꽃의 비밀.</p>
+        <p style="margin: 0.5rem auto; max-width: 700px; font-size: 1.1rem;">회전(rotation)이 들어가면 생명이 생긴다. 연기, 물, 불꽃의 비밀.</p>
+        <p style="margin: 0.5rem auto; font-size: 0.95rem; color: #666;">벡터 미적분이 나오지만 걱정 마세요, 같이 천천히 이해해봐요!</p>
 
-        <div class="comparison-table" style="max-width: 800px; margin: 1.5rem auto;">
+        <div class="comparison-table" style="max-width: 850px; margin: 1rem auto;">
           <div class="comparison-col">
-            <h4>❌ 일반 Noise 문제</h4>
+            <h4>일반 Noise → Gradient 문제</h4>
             <ul>
               <li>각 위치에서 스칼라 값 반환</li>
-              <li>방향이 한 점으로 뭉침 (convergence)</li>
-              <li>파티클이 모여서 뭉치거나 사라짐</li>
-              <li>비현실적인 움직임</li>
+              <li>Gradient = "높은 곳 → 낮은 곳" 방향</li>
+              <li>파티클이 "계곡"으로 모임 (수렴)</li>
+              <li>뭉치거나 사라지는 비현실적 움직임</li>
             </ul>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem; padding: 0.4rem; background: rgba(255,100,100,0.05); border-radius: 4px;">
+              물이 산에서 계곡으로 모이듯, 파티클이 한 곳에 쌓여요
+            </p>
           </div>
           <div class="comparison-col">
-            <h4>✅ Curl Noise 해결</h4>
+            <h4>Curl Noise 해결</h4>
             <ul>
-              <li>Noise의 회전(curl) 성분 계산</li>
-              <li>발산 없음 (divergence-free)</li>
-              <li>유체처럼 자연스럽게 흐름</li>
+              <li>Gradient를 <strong>90도 회전</strong>!</li>
+              <li>등고선을 따라 흐름 (발산 없음)</li>
+              <li>유체처럼 자연스럽게 순환</li>
               <li>절대 뭉치거나 발산하지 않음</li>
             </ul>
+            <p style="font-size: 0.8rem; color: #555; margin-top: 0.5rem; padding: 0.4rem; background: rgba(100,255,100,0.05); border-radius: 4px;">
+              물이 계곡이 아닌 <strong>등고선을 따라</strong> 흐르는 것처럼!
+            </p>
           </div>
         </div>
 
-        <div class="code-block" style="max-width: 650px; margin: 1rem auto; font-size: 0.85rem; text-align: left;">
-          <span class="comment">// 2D Curl Noise - 핵심 공식</span><br>
+        <div class="code-block" style="max-width: 700px; margin: 1rem auto; font-size: 0.85rem; text-align: left;">
+          <span class="comment">// 2D Curl Noise - 핵심 공식 (gradient의 90도 회전!)</span><br>
           eps = <span class="number">0.0001</span>&nbsp;&nbsp;<span class="comment">// 미분용 작은 값</span><br>
           n1 = noise(x, y)<br>
           n2 = noise(x, y + eps)<br>
           n3 = noise(x + eps, y)<br>
-          curl.x = (n2 - n1) / eps&nbsp;&nbsp;<span class="comment">// ∂n/∂y (y방향 변화율)</span><br>
-          curl.y = -(n3 - n1) / eps&nbsp;&nbsp;<span class="comment">// -∂n/∂x (x방향 변화율의 음수)</span>
+          <span class="comment">// Gradient = (∂n/∂x, ∂n/∂y) → 90° 회전 = (∂n/∂y, -∂n/∂x)</span><br>
+          curl.x = (n2 - n1) / eps&nbsp;&nbsp;<span class="comment">// ∂n/∂y</span><br>
+          curl.y = -(n3 - n1) / eps&nbsp;&nbsp;<span class="comment">// -∂n/∂x</span>
+        </div>
+
+        <div class="concept-card" style="max-width: 800px; margin: 1rem auto;">
+          <h4>함께 이해하기: 왜 "Curl"이고 왜 "발산이 없을까"?</h4>
+          <p style="font-size: 0.88rem; line-height: 1.7;">
+            <strong>Curl</strong>은 벡터 미적분에서 "회전량"을 측정해요. 물에 작은 바람개비를 넣으면 회전하는 정도!<br>
+            <strong>Divergence-free</strong>의 의미: ∇·F = 0 → "들어오는 양 = 나가는 양". 물이 솟아나거나 빠지는 곳 없이 그냥 순환!<br>
+            <span style="color: #888;">수학적으로: curl(gradient) = 0이 항상 성립. 우리는 gradient를 회전시켜서 발산을 없앤 거예요!</span>
+          </p>
+        </div>
+
+        <div class="highlight-box" style="max-width: 700px; margin: 1rem auto;">
+          <p><strong>영화 VFX의 비밀:</strong> 아바타, 인터스텔라의 연기/구름 시뮬레이션도 Curl Noise 기반! 2007년 Bridson의 <a href="https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph2007-curlnoise.pdf" target="_blank" style="color: #f87171;">SIGGRAPH 논문</a>이 업계 표준이 됐어요.</p>
         </div>
 
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 수학적 배경</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트 + 수학적 배경</button>
           <div class="notes-content">
             <p><strong>왜 Curl인가:</strong> 벡터 미적분학에서 curl은 "회전"을 나타냅니다. 2D에서는 스칼라 필드의 gradient를 90도 회전시킨 것과 같습니다.</p>
             <p><strong>divergence-free의 의미:</strong> 벡터장의 발산(divergence)이 0이면 "소스"나 "싱크"가 없습니다. 물이 한 곳에서 솟아나거나 빠져나가지 않고 그냥 흐릅니다.</p>
+            <p><strong>직관적 이해:</strong> 지형도를 상상해보세요. Gradient는 "가장 가파른 내리막 방향"이에요. Curl은 그걸 90도 돌려서 "등고선 방향"으로 만든 거예요. 그래서 높이가 변하지 않고 순환만 해요!</p>
             <p><strong>슬라이더 실험:</strong><br>
             - Scale ↑: 더 큰 소용돌이, 느린 변화<br>
             - Scale ↓: 작고 촘촘한 소용돌이<br>
             - Intensity ↑: 더 빠른 움직임<br>
             - Intensity ↓: 부드럽고 느린 흐름</p>
             <p><strong>실무 활용:</strong> 연기, 안개, 물결, 오로라, 추상적 배경 애니메이션에 필수. Three.js, Unity, Unreal 모두 Curl Noise 지원.</p>
-            <p style="margin-top: 1rem;"><strong>🔗 참고:</strong>
+            <p style="margin-top: 1rem;"><strong>참고:</strong>
               <a href="https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph2007-curlnoise.pdf" target="_blank">Curl-Noise (Bridson 원논문)</a> ·
-              <a href="https://www.youtube.com/watch?v=sZBfLgfsvSk" target="_blank">Sebastian Lague: Procedural Landmass</a>
+              <a href="https://www.youtube.com/watch?v=sZBfLgfsvSk" target="_blank">Sebastian Lague: Procedural Landmass</a> ·
+              <a href="https://www.bit-101.com/blog/2021/07/curl-noise/" target="_blank">Bit-101: Curl Noise 설명</a>
             </p>
           </div>
         </div>
@@ -1428,10 +1719,10 @@
           <div class="comparison-col">
             <h4>언제 사용하나?</h4>
             <ul>
-              <li>✅ 시작/끝 지점이 명확할 때</li>
-              <li>✅ UI 전환, 페이드 인/아웃</li>
-              <li>✅ 정확한 타이밍 제어 필요</li>
-              <li>✅ 물리 시뮬 오버헤드가 과할 때</li>
+              <li>시작/끝 지점이 명확할 때</li>
+              <li>UI 전환, 페이드 인/아웃</li>
+              <li>정확한 타이밍 제어 필요</li>
+              <li>물리 시뮬 오버헤드가 과할 때</li>
             </ul>
           </div>
         </div>
@@ -1441,10 +1732,10 @@
         </div>
 
         <div class="references" style="margin-top: 1.5rem;">
-          <h4>🔗 유용한 리소스</h4>
+          <h4>유용한 리소스</h4>
           <div class="ref-grid">
             <div class="ref-item">
-              <div class="ref-icon">📊</div>
+               
               <div>
                 <div class="ref-title">easings.net</div>
                 <div class="ref-desc">30+ easing 함수 시각화 및 코드</div>
@@ -1452,7 +1743,7 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">🎮</div>
+               
               <div>
                 <div class="ref-title">cubic-bezier.com</div>
                 <div class="ref-desc">CSS cubic-bezier 커스텀 에디터</div>
@@ -1476,15 +1767,15 @@
 
         <div class="three-col" style="max-width: 800px; margin: 1.5rem auto;">
           <div class="info-card">
-            <h4>🔗 구조 (Structure)</h4>
+            <h4>구조 (Structure)</h4>
             <p>Verlet Particles<br>+ Distance Constraints<br><span style="color: #666; font-size: 0.8rem;">→ 형태 유지</span></p>
           </div>
           <div class="info-card">
-            <h4>⚡ 힘 (Forces)</h4>
+            <h4>힘 (Forces)</h4>
             <p>Gravity + Spring<br>+ Curl Noise Flow<br><span style="color: #666; font-size: 0.8rem;">→ 움직임 생성</span></p>
           </div>
           <div class="info-card">
-            <h4>🎛️ 변화 (Variation)</h4>
+            <h4>변화 (Variation)</h4>
             <p>파라미터 조절로<br>완전히 다른 결과<br><span style="color: #666; font-size: 0.8rem;">→ 무한 변주</span></p>
           </div>
         </div>
@@ -1507,7 +1798,7 @@
         </div>
 
         <div class="speaker-notes">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 노트 + 시스템 설계 철학</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 노트 + 시스템 설계 철학</button>
           <div class="notes-content">
             <p><strong>데모 가이드:</strong> 3개의 슬라이더를 각각 극단적으로 움직여보세요.<br>
             - Flow만 최대: 바람에 날리는 깃발<br>
@@ -1563,7 +1854,7 @@
         </p>
 
         <div class="speaker-notes" style="margin-top: 2rem;">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 발표 마무리 노트</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">발표 마무리 노트</button>
           <div class="notes-content">
             <p><strong>마무리 멘트:</strong> "오늘 배운 것들은 물리학이 아닙니다. 물리학의 아이디어를 빌려온 창작 도구입니다. 정확할 필요 없습니다. '느낌'이 맞으면 됩니다."</p>
             <p><strong>청중에게 던질 질문:</strong> "여러분이 만들고 싶은 움직임은 어떤 성격인가요? 무겁고 느린? 가볍고 탄성 있는? 유기적이고 흐르는? 오늘 배운 도구들로 그 성격을 코드로 표현해보세요."</p>
@@ -1588,10 +1879,9 @@
         <p style="margin-bottom: 2rem; color: #888;">Creative Coding 여정을 위한 추천 자료들</p>
 
         <div class="references" style="max-width: 1000px; margin: 0 auto;">
-          <h4>📚 필수 도서 & 강의</h4>
+          <h4>필수 도서 & 강의</h4>
           <div class="ref-grid">
             <div class="ref-item">
-              <div class="ref-icon">📖</div>
               <div>
                 <div class="ref-title">The Nature of Code</div>
                 <div class="ref-desc">Daniel Shiffman. 물리 기반 크리에이티브 코딩의 바이블. 무료 온라인 버전 제공.</div>
@@ -1599,7 +1889,6 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">🎬</div>
               <div>
                 <div class="ref-title">The Coding Train</div>
                 <div class="ref-desc">YouTube 채널. 시각적으로 이해하기 쉬운 코딩 튜토리얼.</div>
@@ -1607,7 +1896,6 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">🎓</div>
               <div>
                 <div class="ref-title">Generative Design</div>
                 <div class="ref-desc">Benedikt Gross 외. 알고리즘 기반 디자인의 교과서.</div>
@@ -1615,7 +1903,6 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">📘</div>
               <div>
                 <div class="ref-title">Game Programming Patterns</div>
                 <div class="ref-desc">Bob Nystrom. 게임 루프, 상태 패턴 등 구조적 접근법.</div>
@@ -1626,10 +1913,9 @@
         </div>
 
         <div class="references" style="max-width: 1000px; margin: 1.5rem auto;">
-          <h4>🛠️ 라이브러리 & 프레임워크</h4>
+          <h4>라이브러리 & 프레임워크</h4>
           <div class="ref-grid">
             <div class="ref-item">
-              <div class="ref-icon">🎨</div>
               <div>
                 <div class="ref-title">p5.js</div>
                 <div class="ref-desc">가장 접근하기 쉬운 크리에이티브 코딩 라이브러리. Processing의 JS 버전.</div>
@@ -1637,7 +1923,6 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">🌐</div>
               <div>
                 <div class="ref-title">Three.js</div>
                 <div class="ref-desc">WebGL 기반 3D 그래픽스. 파티클 시스템, 셰이더 지원.</div>
@@ -1645,7 +1930,7 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">⚡</div>
+               
               <div>
                 <div class="ref-title">Matter.js</div>
                 <div class="ref-desc">2D 물리 엔진. 강체, 충돌, 제약조건 시뮬레이션.</div>
@@ -1653,7 +1938,7 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">🔬</div>
+               
               <div>
                 <div class="ref-title">Cannon.js / Rapier</div>
                 <div class="ref-desc">3D 물리 엔진. Three.js와 함께 사용하기 좋음.</div>
@@ -1664,10 +1949,10 @@
         </div>
 
         <div class="references" style="max-width: 1000px; margin: 1.5rem auto;">
-          <h4>🌟 영감을 주는 곳들</h4>
+          <h4>영감을 주는 곳들</h4>
           <div class="ref-grid">
             <div class="ref-item">
-              <div class="ref-icon">🖼️</div>
+               
               <div>
                 <div class="ref-title">OpenProcessing</div>
                 <div class="ref-desc">Processing/p5.js 작품 공유 플랫폼. 코드 공개.</div>
@@ -1675,7 +1960,7 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">✨</div>
+               
               <div>
                 <div class="ref-title">Shadertoy</div>
                 <div class="ref-desc">GLSL 셰이더 작품들. 고급 비주얼 기법 학습.</div>
@@ -1683,7 +1968,7 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">🎯</div>
+               
               <div>
                 <div class="ref-title">CodePen</div>
                 <div class="ref-desc">웹 기반 코드 실험 플랫폼. Creative Coding 태그 검색.</div>
@@ -1691,7 +1976,7 @@
               </div>
             </div>
             <div class="ref-item">
-              <div class="ref-icon">📱</div>
+               
               <div>
                 <div class="ref-title">#genart / #creativecoding</div>
                 <div class="ref-desc">Twitter/X, Instagram 해시태그. 최신 트렌드와 영감.</div>
@@ -1701,7 +1986,7 @@
         </div>
 
         <div class="speaker-notes" style="margin-top: 1.5rem;">
-          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">📝 자료 소개 노트</button>
+          <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('active')">자료 소개 노트</button>
           <div class="notes-content">
             <p><strong>입문자 추천 학습 경로:</strong><br>
             1. p5.js 공식 튜토리얼 (Get Started)<br>

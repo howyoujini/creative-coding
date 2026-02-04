@@ -1,5 +1,8 @@
 export class Vector {
-  constructor(public x: number = 0, public y: number = 0) {}
+  constructor(
+    public x: number = 0,
+    public y: number = 0,
+  ) {}
 
   static create(x: number, y: number): Vector {
     return new Vector(x, y);
@@ -115,9 +118,6 @@ export class Vector {
   }
 
   static lerp(v1: Vector, v2: Vector, t: number): Vector {
-    return new Vector(
-      v1.x + (v2.x - v1.x) * t,
-      v1.y + (v2.y - v1.y) * t
-    );
+    return new Vector(v1.x + (v2.x - v1.x) * t, v1.y + (v2.y - v1.y) * t);
   }
 }

@@ -1,5 +1,5 @@
-import { Vector } from '../physics/vector';
 import { curlNoise } from '../physics/noise';
+import { Vector } from '../physics/vector';
 
 interface CurlParticle {
   pos: Vector;
@@ -59,7 +59,7 @@ export class Demo12CurlNoise {
       vel: new Vector(0, 0),
       trail: [],
       life: 0,
-      maxLife: 150 + Math.random() * 150
+      maxLife: 150 + Math.random() * 150,
     };
   }
 
@@ -122,9 +122,13 @@ export class Demo12CurlNoise {
       }
 
       // Reset if out of bounds or dead
-      if (p.pos.x < -50 || p.pos.x > w + 50 ||
-          p.pos.y < -50 || p.pos.y > h + 50 ||
-          p.life > p.maxLife) {
+      if (
+        p.pos.x < -50 ||
+        p.pos.x > w + 50 ||
+        p.pos.y < -50 ||
+        p.pos.y > h + 50 ||
+        p.life > p.maxLife
+      ) {
         const newP = this.createParticle();
         p.pos = newP.pos;
         p.vel = newP.vel;

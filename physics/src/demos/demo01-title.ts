@@ -1,5 +1,5 @@
-import { Vector } from '../physics/vector';
 import { curlNoise } from '../physics/noise';
+import { Vector } from '../physics/vector';
 
 interface FlowParticle {
   pos: Vector;
@@ -37,7 +37,7 @@ export class Demo01Title {
       vel: new Vector(0, 0),
       life: 0,
       maxLife: 200 + Math.random() * 200,
-      trail: []
+      trail: [],
     };
   }
 
@@ -95,9 +95,13 @@ export class Demo01Title {
       }
 
       // Reset if out of bounds or dead
-      if (p.pos.x < -50 || p.pos.x > w + 50 ||
-          p.pos.y < -50 || p.pos.y > h + 50 ||
-          p.life > p.maxLife) {
+      if (
+        p.pos.x < -50 ||
+        p.pos.x > w + 50 ||
+        p.pos.y < -50 ||
+        p.pos.y > h + 50 ||
+        p.life > p.maxLife
+      ) {
         const newP = this.createParticle();
         p.pos = newP.pos;
         p.vel = newP.vel;
