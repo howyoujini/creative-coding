@@ -1,5 +1,6 @@
 import { noise } from '../physics/noise';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 interface Dot {
   pos: Vector;
@@ -98,9 +99,9 @@ export class Demo02Random {
     const h = parent.offsetHeight;
 
     // Clear
-    this.ctxLeft.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    this.ctxLeft.fillStyle = getBgColor(0.15);
     this.ctxLeft.fillRect(0, 0, w, h);
-    this.ctxRight.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    this.ctxRight.fillStyle = getBgColor(0.15);
     this.ctxRight.fillRect(0, 0, w, h);
 
     this.time += 0.02;

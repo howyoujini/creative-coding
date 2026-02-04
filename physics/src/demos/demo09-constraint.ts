@@ -1,5 +1,6 @@
 import { Constraint, VerletParticle } from '../physics/particle';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 export class Demo09Constraint {
   private canvas: HTMLCanvasElement;
@@ -217,7 +218,7 @@ export class Demo09Constraint {
     const w = this.canvas.offsetWidth;
     const h = this.canvas.offsetHeight;
 
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.3)';
+    this.ctx.fillStyle = getBgColor(0.3);
     this.ctx.fillRect(0, 0, w, h);
 
     // Apply gravity

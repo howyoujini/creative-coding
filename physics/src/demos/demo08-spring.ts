@@ -1,4 +1,5 @@
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 interface SpringPoint {
   pos: Vector;
@@ -118,7 +119,7 @@ export class Demo08Spring {
     const w = this.canvas.offsetWidth;
     const h = this.canvas.offsetHeight;
 
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+    this.ctx.fillStyle = getBgColor(0.1);
     this.ctx.fillRect(0, 0, w, h);
 
     for (const point of this.points) {

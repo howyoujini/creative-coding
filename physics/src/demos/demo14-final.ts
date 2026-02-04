@@ -1,6 +1,7 @@
 import { curlNoise } from '../physics/noise';
 import { Constraint, VerletParticle } from '../physics/particle';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 export class Demo14Final {
   private canvas: HTMLCanvasElement;
@@ -129,7 +130,7 @@ export class Demo14Final {
     const cx = w / 2;
     const cy = h / 2;
 
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
+    this.ctx.fillStyle = getBgColor(0.15);
     this.ctx.fillRect(0, 0, w, h);
 
     this.time += 0.01;

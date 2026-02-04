@@ -1,5 +1,6 @@
 import { curlNoise } from '../physics/noise';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 interface CurlParticle {
   pos: Vector;
@@ -83,7 +84,7 @@ export class Demo12CurlNoise {
     const h = this.canvas.offsetHeight;
 
     // Very subtle fade for long trails
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.03)';
+    this.ctx.fillStyle = getBgColor(0.03);
     this.ctx.fillRect(0, 0, w, h);
 
     this.time += 0.005;

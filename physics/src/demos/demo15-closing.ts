@@ -1,5 +1,6 @@
 import { curlNoise } from '../physics/noise';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 interface ClosingParticle {
   pos: Vector;
@@ -96,7 +97,7 @@ export class Demo15Closing {
     const cy = h / 2;
 
     // Very subtle fade
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.02)';
+    this.ctx.fillStyle = getBgColor(0.02);
     this.ctx.fillRect(0, 0, w, h);
 
     this.time += 0.003;

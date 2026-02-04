@@ -18,6 +18,159 @@
       overflow: hidden;
       width: 100vw;
       height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Light mode */
+    body.light-mode {
+      background: #ffffff;
+      color: #1a1a1a;
+    }
+
+    body.light-mode h3,
+    body.light-mode .subtitle,
+    body.light-mode .nav button,
+    body.light-mode .slide-number {
+      color: #555;
+    }
+
+    body.light-mode p,
+    body.light-mode .list {
+      color: #444;
+    }
+
+    body.light-mode .message {
+      color: #1a1a1a;
+    }
+
+    body.light-mode .nav button {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .nav button:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: #000;
+    }
+
+    body.light-mode .nav button.active {
+      background: rgba(248, 113, 113, 0.6);
+      border-color: rgba(248, 113, 113, 0.8);
+      color: #fff;
+    }
+
+    body.light-mode .toggle-btn {
+      background: rgba(248, 113, 113, 0.15);
+    }
+
+    body.light-mode .code-block {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: #1a1a1a;
+    }
+
+    body.light-mode .code-block .comment {
+      color: #6a737d;
+    }
+
+    body.light-mode .code-block .keyword {
+      color: #8b5cf6;
+    }
+
+    body.light-mode .code-block .property {
+      color: #2563eb;
+    }
+
+    body.light-mode .code-block .number {
+      color: #d97706;
+    }
+
+    body.light-mode .code-block .string {
+      color: #059669;
+    }
+
+    body.light-mode .math-block {
+      background: rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-mode .math-block .formula-explain {
+      color: #444;
+    }
+
+    body.light-mode .concept-card {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .concept-card p {
+      color: #555;
+    }
+
+    body.light-mode .description {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .description p {
+      color: #555;
+    }
+
+    body.light-mode .comparison-col {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .comparison-col ul {
+      color: #555;
+    }
+
+    body.light-mode .notes-toggle {
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.15);
+      color: #555;
+    }
+
+    body.light-mode .notes-toggle:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: #1a1a1a;
+    }
+
+    body.light-mode .notes-content {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .progress {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .controls {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .slider-label,
+    body.light-mode .control-group label {
+      color: #555;
+    }
+
+    body.light-mode input[type="range"] {
+      background: #ddd;
+    }
+
+    body.light-mode .toggle-btn {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.4);
+    }
+
+    body.light-mode .toggle-btn:hover {
+      background: rgba(248, 113, 113, 0.2);
+    }
+
+    body.light-mode .toggle-btn.active {
+      background: #f87171;
+      color: #fff;
     }
 
     #app {
@@ -2037,6 +2190,7 @@
     </section>
 
     <div class="nav">
+      <button id="theme-toggle" title="Toggle Light/Dark Mode">☀️</button>
       <button id="scrollbar-toggle" title="Toggle Pointer Events">🖱️</button>
       <button id="prev-btn">←</button>
       <button id="next-btn">→</button>

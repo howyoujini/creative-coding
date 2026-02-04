@@ -36,6 +36,7 @@ class Presentation {
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const scrollbarToggle = document.getElementById('scrollbar-toggle');
+    const themeToggle = document.getElementById('theme-toggle');
 
     prevBtn?.addEventListener('click', () => this.goToSlide(this.currentSlide - 1));
     nextBtn?.addEventListener('click', () => this.goToSlide(this.currentSlide + 1));
@@ -43,6 +44,12 @@ class Presentation {
     scrollbarToggle?.addEventListener('click', () => {
       document.body.classList.toggle('show-scrollbar');
       scrollbarToggle.classList.toggle('active');
+    });
+
+    themeToggle?.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light-mode');
+      themeToggle.textContent = isLight ? '🌙' : '☀️';
+      themeToggle.classList.toggle('active');
     });
   }
 

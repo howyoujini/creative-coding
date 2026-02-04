@@ -1,4 +1,5 @@
 import { Vector } from '../physics/vector';
+import { getBgColor, getBgColorSolid } from '../utils/theme';
 
 interface EasingDot {
   pos: Vector;
@@ -99,9 +100,9 @@ export class Demo13Easing {
     const w = parent.offsetWidth;
     const h = parent.offsetHeight;
 
-    this.ctxLinear.fillStyle = '#0a0a0f';
+    this.ctxLinear.fillStyle = getBgColorSolid();
     this.ctxLinear.fillRect(0, 0, w, h);
-    this.ctxSmooth.fillStyle = '#0a0a0f';
+    this.ctxSmooth.fillStyle = getBgColorSolid();
     this.ctxSmooth.fillRect(0, 0, w, h);
 
     this.time += 0.008;
@@ -181,7 +182,7 @@ export class Demo13Easing {
     const curveY = 15;
 
     // Background
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillStyle = getBgColor(0.5);
     ctx.fillRect(curveX, curveY, curveW, curveH);
 
     // Curve

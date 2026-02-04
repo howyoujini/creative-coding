@@ -1,5 +1,6 @@
 import { noise } from '../physics/noise';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 type RuleType = 'linear' | 'circular' | 'noise' | 'spring';
 
@@ -71,7 +72,7 @@ export class Demo03Rules {
     const cx = w / 2;
     const cy = h / 2;
 
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.08)';
+    this.ctx.fillStyle = getBgColor(0.08);
     this.ctx.fillRect(0, 0, w, h);
 
     this.time += 0.02;

@@ -1,5 +1,6 @@
 import { curlNoise } from '../physics/noise';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 interface FlowParticle {
   pos: Vector;
@@ -60,7 +61,7 @@ export class Demo01Title {
     const w = this.canvas.offsetWidth;
     const h = this.canvas.offsetHeight;
 
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+    this.ctx.fillStyle = getBgColor(0.05);
     this.ctx.fillRect(0, 0, w, h);
 
     this.time += 0.003;
@@ -71,13 +72,13 @@ export class Demo01Title {
       p.vel.x += curl.x * 0.3;
       p.vel.y += curl.y * 0.3;
       p.vel.mult(0.95);
-      p.vel.limit(1.5);
+      p.vel.limit(2.5);
 
       p.pos.add(p.vel);
       p.life++;
 
       p.trail.push(p.pos.copy());
-      if (p.trail.length > 30) {
+      if (p.trail.length > 50) {
         p.trail.shift();
       }
 
@@ -88,9 +89,9 @@ export class Demo01Title {
         for (let i = 1; i < p.trail.length; i++) {
           this.ctx.lineTo(p.trail[i].x, p.trail[i].y);
         }
-        const alpha = Math.min(p.life / 50, 1) * (1 - p.life / p.maxLife) * 0.3;
+        const alpha = Math.min(p.life / 50, 1) * (1 - p.life / p.maxLife);
         this.ctx.strokeStyle = `rgba(248, 113, 113, ${alpha})`;
-        this.ctx.lineWidth = 1;
+        this.ctx.lineWidth = 3;
         this.ctx.stroke();
       }
 

@@ -1,5 +1,6 @@
 import { noise } from '../physics/noise';
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 interface FlowParticle {
   pos: Vector;
@@ -169,7 +170,7 @@ export class Demo11FlowField {
     const h = this.canvas.offsetHeight;
 
     // Clear with controllable transparency for trails
-    this.ctx.fillStyle = `rgba(10, 10, 15, ${this.trailOpacity})`;
+    this.ctx.fillStyle = getBgColor(this.trailOpacity);
     this.ctx.fillRect(0, 0, w, h);
 
     this.time += 0.01;

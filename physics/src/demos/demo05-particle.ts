@@ -1,4 +1,5 @@
 import { Vector } from '../physics/vector';
+import { getBgColorSolid, getTextColor, getTextColorMuted } from '../utils/theme';
 
 export class Demo05Particle {
   private canvas: HTMLCanvasElement;
@@ -107,7 +108,7 @@ export class Demo05Particle {
     const w = parent.offsetWidth;
     const h = parent.offsetHeight;
 
-    this.ctx.fillStyle = '#0a0a0f';
+    this.ctx.fillStyle = getBgColorSolid();
     this.ctx.fillRect(0, 0, w, h);
 
     this.time += 0.02;
@@ -162,7 +163,7 @@ export class Demo05Particle {
     this.ctx.fill();
 
     // Draw mass indicator
-    this.ctx.fillStyle = '#0a0a0f';
+    this.ctx.fillStyle = getBgColorSolid();
     this.ctx.font = `${10 + this.mass * 2}px monospace`;
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
@@ -171,11 +172,11 @@ export class Demo05Particle {
     this.ctx.textBaseline = 'alphabetic';
 
     // Draw vectors
-    this.drawVector(this.pos, Vector.mult(this.vel, 15), '#ffffff', 'velocity');
+    this.drawVector(this.pos, Vector.mult(this.vel, 15), getTextColor(), 'velocity');
     this.drawVector(this.pos, Vector.mult(this.acc, 150), '#f87171', 'force');
 
     // Labels
-    this.ctx.fillStyle = '#666';
+    this.ctx.fillStyle = getTextColorMuted();
     this.ctx.font = '12px monospace';
     this.ctx.fillText(`position: (${this.pos.x.toFixed(0)}, ${this.pos.y.toFixed(0)})`, 15, 25);
     this.ctx.fillText(`velocity: (${this.vel.x.toFixed(2)}, ${this.vel.y.toFixed(2)})`, 15, 45);
@@ -184,13 +185,13 @@ export class Demo05Particle {
 
     // Legend
     const legendY = h - 50;
-    this.ctx.fillStyle = '#fff';
+    this.ctx.fillStyle = getTextColor();
     this.ctx.fillRect(15, legendY, 10, 3);
     this.ctx.fillText('velocity', 30, legendY + 5);
 
     this.ctx.fillStyle = '#f87171';
     this.ctx.fillRect(15, legendY + 20, 10, 3);
-    this.ctx.fillStyle = '#666';
+    this.ctx.fillStyle = getTextColorMuted();
     this.ctx.fillText('force (a = F/m)', 30, legendY + 25);
   };
 

@@ -1,4 +1,5 @@
 import { Vector } from '../physics/vector';
+import { getBgColor } from '../utils/theme';
 
 interface IntegrationParticle {
   pos: Vector;
@@ -193,7 +194,7 @@ export class Demo07Integration {
     h: number,
     mouse: Vector,
   ): void {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.fillStyle = getBgColor(0.15);
     ctx.fillRect(0, 0, w, h);
 
     // Draw trail
