@@ -19,6 +19,7 @@ export class Demo07Integration {
   private animationId: number = 0;
   private mouseEuler: Vector;
   private mouseVerlet: Vector;
+  private time: number = 0;
 
   constructor(eulerId: string, verletId: string) {
     this.canvasEuler = document.getElementById(eulerId) as HTMLCanvasElement;
@@ -60,8 +61,8 @@ export class Demo07Integration {
       canvas.style.height = `${h}px`;
     });
 
-    const w = this.canvasEuler.parentElement?.offsetWidth;
-    const h = this.canvasEuler.parentElement?.offsetHeight;
+    const w = this.canvasEuler.parentElement!.offsetWidth;
+    const h = this.canvasEuler.parentElement!.offsetHeight;
 
     this.eulerParticle.pos = new Vector(w / 2, h / 2);
     this.eulerParticle.oldPos = this.eulerParticle.pos.copy();
